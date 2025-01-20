@@ -10,6 +10,23 @@ const getAllTasks = (req, res) => {
   });
 };
 
+// Controller to fetch tasks for a specific project
+const getTasksByProject = (req, res) => {
+  const projectId = req.params.projectId; // Extract projectId from the URL
+
+  db.query('SELECT * FROM task WHERE Project_ID = ?', [projectId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: 'No tasks found for this project' });
+    }
+
+    res.json(results); // Return the tasks for the specified project
+  });
+};
+
 // Controller to add a new task
 const addTask = (req, res) => {
   const { Task_Name, Due_Date, Project_ID, Status, Priority } = req.body;
@@ -38,4 +55,4 @@ const addTask = (req, res) => {
   });
 };
 
-module.exports = { getAllTasks, addTask }; // Make sure both functions are exported
+module.exports = { getAllTasks, getTasksByProject, addTask }; // Export the functions

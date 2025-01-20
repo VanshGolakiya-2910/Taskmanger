@@ -26,6 +26,7 @@ const Homepage = () => {
   }, []);
 
   return (
+    
     <div className={styles.container}>
       <div className={styles.sidebar}>
         <div className={styles.logo}>Task Manager</div>
@@ -37,7 +38,7 @@ const Homepage = () => {
             <Link to="/task-manager">Tasks</Link>
           </li>
           <li className={styles.navItem}>
-            <Link to="/project-files">Project</Link>
+            <Link to="/project">Project</Link>
           </li>
           <li className={styles.navItem}>Notification</li>
           <li className={styles.navItem}>Settings</li>

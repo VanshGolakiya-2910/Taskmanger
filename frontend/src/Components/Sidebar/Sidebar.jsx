@@ -1,11 +1,12 @@
 import React from 'react';
 import styles from './Sidebar.module.css';
 
+// Updated menu items with icon classes
 const menuItems = [
-  { id: 1, label: 'Home' },
-  { id: 2, label: 'Projects' },
-  { id: 3, label: 'Chat' },
-  { id: 4, label: 'Settings' }
+  { id: 1, label: 'Home', icon: 'bi bi-house' },
+  { id: 2, label: 'Projects', icon: 'bi bi-clipboard' },
+  { id: 3, label: 'Chat', icon: 'bi bi-chat' },
+  { id: 4, label: 'Settings', icon: 'bi bi-gear' }
 ];
 
 export const Sidebar = () => {
@@ -16,7 +17,7 @@ export const Sidebar = () => {
       <nav className={styles.navigation}>
         {menuItems.map(item => (
           <div key={item.id} className={styles.menuItem}>
-            <div className={styles.menuIcon} />
+            <i className={`${item.icon} ${styles.menuIcon}`} />
             <span>{item.label}</span>
           </div>
         ))}

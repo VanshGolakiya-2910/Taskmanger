@@ -6,8 +6,11 @@
     background-color: white;
     margin: 0;
 } */
-
 /* Sidebar Styling */
+.container{
+    display: flex;
+}
+
 .sidebar {
     width: 250px;
     background-color: #f8f8f8;

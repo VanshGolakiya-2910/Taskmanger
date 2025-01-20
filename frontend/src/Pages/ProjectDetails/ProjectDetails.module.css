@@ -1,0 +1,291 @@
+.container {
+    background-color: #fff;
+    overflow: hidden;
+  }
+  
+  .layout {
+    display: flex;
+  }
+  
+  @media (max-width: 991px) {
+    .layout {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+  }
+  
+  .sidebar {
+    background-color: #f8f8fb;
+    display: flex;
+    width: 20%;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: start;
+    color: #000;
+    text-align: right;
+    padding: 25px 75px 652px 20px;
+    font: 400 18px/1 Rubik, sans-serif;
+  }
+  
+  @media (max-width: 991px) {
+    .sidebar {
+      width: 100%;
+      padding: 0 20px 100px 0;
+    }
+  }
+  
+  .sidebarHeader {
+    font-size: 30px;
+    line-height: 0.5;
+  }
+  
+  .menuTitle {
+    font-size: 36px;
+    line-height: 1;
+    margin: 149px 0 0 71px;
+  }
+  
+  .menuItem {
+    display: flex;
+    gap: 28px;
+    white-space: nowrap;
+    margin: 30px 0 0 39px;
+  }
+  
+  .menuIcon {
+    background-color: #d9d9d9;
+    width: 17px;
+    height: 15px;
+    margin: auto 0;
+  }
+  
+  .active {
+    font-weight: 500;
+  }
+  
+  .mainContent {
+    width: 80%;
+  }
+  
+  .header {
+    background-color: #fff;
+    box-shadow: 1px 2px 11px rgba(148, 148, 148, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 25px;
+  }
+  
+  .searchBar {
+    border-radius: 101px;
+    background-color: #fff;
+    display: flex;
+    gap: 21px;
+    padding: 10px 20px;
+    border: 1px solid #ebebeb;
+  }
+  
+  .searchInput {
+    border: none;
+    outline: none;
+    color: #6c6c6c;
+    font: 400 16px/1 Rubik, sans-serif;
+    width: 100%;
+  }
+  
+  .headerActions {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+  
+  .avatar {
+    background-color: #d9d9d9;
+    border-radius: 50%;
+    width: 59px;
+    height: 59px;
+  }
+  
+  .projectSection {
+    margin: 25px 0 0 15px;
+  }
+  
+  .projectTitle {
+    color: #000;
+    font: 500 36px/1 Rubik, sans-serif;
+  }
+  
+  .projectInfo {
+    display: flex;
+    gap: 24px;
+    margin-top: 26px;
+    flex-wrap: wrap;
+  }
+  
+  .projectDates {
+    border-radius: 17px;
+    background-color: #f6f6f6;
+    padding: 20px 24px;
+  }
+  
+  .dateInfo {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .projectDescription {
+    border-radius: 17px;
+    background-color: #f6f6f6;
+    font-size: 32px;
+    padding: 40px 70px;
+  }
+  
+  .contentGrid {
+    display: flex;
+    gap: 20px;
+    margin-top: 33px;
+  }
+  
+  .tasksColumn {
+    width: 22%;
+    background-color: #f6f6f6;
+    border-radius: 17px;
+    padding: 20px;
+  }
+  
+  .columnHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .taskCard {
+    background-color: #e0e4ea;
+    border-radius: 17px;
+    padding: 10px 22px;
+    margin-top: 14px;
+  }
+  
+  .highPriority {
+    background-color: #e74444;
+    color: #fff;
+    border-radius: 14px;
+    padding: 0 9px;
+  }
+  
+  .mediumPriority {
+    background-color: #ff9533;
+    color: #fff;
+    border-radius: 14px;
+    padding: 0 9px;
+  }
+  
+  .lowPriority {
+    background-color: #67cb65;
+    color: #fff;
+    border-radius: 14px;
+    padding: 0 9px;
+  }
+  
+  .chatColumn {
+    width: 51%;
+    background-color: #f6f6f6;
+    border-radius: 17px;
+    padding: 13px 22px;
+  }
+  
+  .chatArea {
+    background-color: #d9d9d9;
+    height: 491px;
+    border-radius: 17px;
+    margin: 5px 0;
+  }
+  
+  .messageBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #d9d9d9;
+    border-radius: 17px;
+    padding: 14px 30px;
+  }
+  
+  .teamColumn {
+    width: 22%;
+    background-color: #f6f6f6;
+    border-radius: 17px;
+    padding: 22px;
+  }
+  
+  .memberSearchInput {
+    border-radius: 101px;
+    background-color: #d9d9d9;
+    width: 100%;
+    padding: 3px 17px;
+    border: none;
+    margin-top: 22px;
+  }
+  
+  .memberRow {
+    background-color: #d9d9d9;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 10px;
+    margin-top: 6px;
+  }
+  
+  .addButton {
+    background-color: #63779a;
+    border-radius: 4px;
+    padding: 0 3px;
+    color: #fff;
+  }
+  
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure the modal is on top */
+}
+
+/* Modal content */
+.modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 60%; /* Adjust width as needed */
+    max-height: 80%; /* Ensure the modal doesn't overflow */
+    overflow-y: auto; /* Scrollable content if it overflows */
+}
+
+/* Close button */
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}

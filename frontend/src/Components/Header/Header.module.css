@@ -1,0 +1,62 @@
+.header {
+    background-color: #fff;
+    box-shadow: 1px 2px 11px rgba(148, 148, 148, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 80px 12px 25px;
+  }
+  
+  .searchContainer {
+    display: flex;
+    align-items: center;
+    gap: 21px;
+  }
+  
+  .searchIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .searchInput {
+    border-radius: 101px;
+    background-color: #fff;
+    display: flex;
+    border: 1px solid #ebebeb;
+    padding: 16px 22px;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: #6c6c6c;
+    font: 400 16px/1 Rubik, sans-serif;
+  }
+  
+  .userSection {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+  
+  .notificationIcon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .userProfile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .avatar {
+    background-color: #d9d9d9;
+    border-radius: 50%;
+    width: 59px;
+    height: 59px;
+  }
+  
+  .userName {
+    font: 400 18px/1 Rubik, sans-serif;
+    color: #000;
+  }
+  
