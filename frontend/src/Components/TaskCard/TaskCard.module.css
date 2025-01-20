@@ -1,0 +1,71 @@
+/* TaskCard.module.css */
+
+.taskCard {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .taskCard:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .taskHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .taskTitle {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+  }
+  
+  .priority {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    background-color: #ff4500; /* Default priority color */
+  }
+  
+  .priority.low {
+    background-color: #4caf50; /* Green for low priority */
+  }
+  
+  .priority.medium {
+    background-color: #ff9800; /* Orange for medium priority */
+  }
+  
+  .priority.high {
+    background-color: #f44336; /* Red for high priority */
+  }
+  
+  .taskDetails {
+    margin-top: 12px;
+  }
+  
+  .detailRow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  
+  .label {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .taskDetails span {
+    color: #666;
+    font-size: 0.9em;
+  }
+  

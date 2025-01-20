@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../api/api';
-import './TaskManager.module.css';
+import './TaskManger.module.css';
 
 const TaskManager = () => {
     const [tasks, setTasks] = useState([]);
