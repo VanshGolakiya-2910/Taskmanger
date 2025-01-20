@@ -3,7 +3,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'taskmanger'
+  database: 'taskmanager'
 });
 
 db.connect((err) => {
