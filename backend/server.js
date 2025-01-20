@@ -1,8 +1,8 @@
-// server.js or app.js
 const express = require('express');
 const cors = require('cors');
-const taskRoutes = require('./routes/taskroutes');
-const authRoutes = require('./routes/authRoutes'); // Import auth routes
+const taskRoutes = require('./routes/taskRoutes'); // Task routes
+const authRoutes = require('./routes/authRoutes'); // Auth routes
+const projectRoutes = require('./routes/projectRoutes'); // Project routes
 
 const app = express();
 
@@ -10,11 +10,16 @@ const app = express();
 app.use(cors()); // Enable CORS for all origins
 app.use(express.json()); // Middleware to parse JSON
 
-// Use taskRoutes with the base /api/tasks URL
-app.use('/api/tasks', taskRoutes); // Task-related routes
+// Middleware to log requests
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`);
+  next();
+});
 
-// Define other routes as needed
+// Routes
+app.use('/api/tasks', taskRoutes); // Task-related routes
 app.use('/api/auth', authRoutes); // Auth-related routes
+app.use('/api/projects', projectRoutes); // Project-related routes
 
 // Root URL for testing
 app.get('/', (req, res) => {
@@ -25,8 +30,4 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`);
-  next();
 });

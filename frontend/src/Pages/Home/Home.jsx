@@ -1,54 +1,57 @@
 import React, { useState, useEffect } from "react";
-import "./Home.css"; // Assuming Home.css is used for styling
-import CustomCalendar from "../../Components/CutomCalendar/CustomCalendar"; // Import CustomCalendar component
+import styles from "./Home.module.css"; // Importing module CSS
+import CustomCalendar from "../../Components/CutomCalendar/CustomCalendar";
 import axios from "axios";
-import { TaskCard } from "../../Components/TaskCard/TaskCard"; // Import the TaskCard component
+import { TaskCard } from "../../Components/TaskCard/TaskCard";
+import { Link } from "react-router-dom";
 
 const Homepage = () => {
-  // State to store the tasks
   const [tasks, setTasks] = useState([]);
   const [priorityTasks, setPriorityTasks] = useState([]);
 
-  // Fetch tasks from the API
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/tasks");
         const allTasks = response.data;
-        
-        // Filter tasks based on priority 1
-        const priorityTasks = allTasks.filter(task => task.Priority === 1); // Assuming task has a 'Priority' field
-        setTasks(allTasks); // Set all tasks in state
-        setPriorityTasks(priorityTasks); // Set high-priority tasks in state
+        const priorityTasks = allTasks.filter((task) => task.Priority === 1);
+        setTasks(allTasks);
+        setPriorityTasks(priorityTasks);
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
     };
 
     fetchTasks();
-  }, []); // Empty dependency array means this effect runs once when the component mounts
+  }, []);
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <div className="sidebar">
-        <div className="logo">Task Manager</div>
-        <ul className="nav-items">
-          <li className="nav-item">Home</li>
-          <li className="nav-item">Tasks</li>
-          <li className="nav-item">Calendar</li>
-          <li className="nav-item">Reports</li>
-          <li className="nav-item">Settings</li>
+    <div className={styles.container}>
+      <div className={styles.sidebar}>
+        <div className={styles.logo}>Task Manager</div>
+        <ul className={styles.navItems}>
+          <li className={styles.navItem}>
+            <Link to="/">Home</Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link to="/task-manager">Tasks</Link>
+          </li>
+          <li className={styles.navItem}>
+            <Link to="/project-files">Project</Link>
+          </li>
+          <li className={styles.navItem}>Notification</li>
+          <li className={styles.navItem}>Settings</li>
         </ul>
       </div>
 
-      <div className="main-content">
-        <div className="quadrants">
-          <div className="quadrant">
-            <h2 className="task-heading">Priority Tasks</h2>
-            <div className="task-list">
+      <div className={styles.mainContent}>
+        <div className={styles.quadrants}>
+          <div className={styles.quadrant}>
+            <h2 className={styles.taskHeading}>Priority Tasks</h2>
+            <div className={styles.taskList}>
               {priorityTasks.length > 0 ? (
                 priorityTasks.map((task) => (
-                  <TaskCard key={task.Task_ID} task={task} /> // Use TaskCard for each task
+                  <TaskCard key={task.Task_ID} task={task} />
                 ))
               ) : (
                 <p>No priority tasks available</p>
@@ -56,18 +59,17 @@ const Homepage = () => {
             </div>
           </div>
 
-          <div className="quadrant">
-            {/* Use CustomCalendar Component */}
+          <div className={styles.quadrant}>
             <CustomCalendar />
           </div>
 
-          <div className="bottom-row">
-            <div className="bottom-left">
-              <h2 className="task-heading">Ongoing/Pending Tasks</h2>
-              <div className="task-list">
+          <div className={styles.bottomRow}>
+            <div className={styles.bottomLeft}>
+              <h2 className={styles.taskHeading}>Ongoing/Pending Tasks</h2>
+              <div className={styles.taskList}>
                 {tasks.length > 0 ? (
                   tasks.map((task) => (
-                    <TaskCard key={task.Task_ID} task={task} /> // Use TaskCard for each task
+                    <TaskCard key={task.Task_ID} task={task} />
                   ))
                 ) : (
                   <p>No ongoing tasks</p>
@@ -75,9 +77,8 @@ const Homepage = () => {
               </div>
             </div>
 
-            <div className="bottom-right">
-              <h2 className="task-heading">Completed Tasks</h2>
-              {/* Add completed tasks here if available */}
+            <div className={styles.bottomRight}>
+              <h2 className={styles.taskHeading}>Completed Tasks</h2>
             </div>
           </div>
         </div>

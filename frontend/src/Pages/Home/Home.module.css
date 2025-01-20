@@ -1,0 +1,102 @@
+/* General Styling */
+/* body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    margin: 0;
+} */
+
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    background-color: #f8f8f8;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    color: #333;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+.navItems {
+    list-style: none;
+    padding: 0;
+}
+
+.navItem {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    color: #666;
+}
+
+.navItem:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+/* Main Content */
+.mainContent {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Quadrants Layout */
+.quadrants {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 15px;
+}
+
+.quadrant {
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    overflow: auto;
+    height: 100%;
+}
+
+/* Bottom Row Layout */
+.bottomRow {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 15px;
+}
+
+.bottomLeft {
+    flex: 1;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    overflow: auto;
+}
+
+.bottomRight {
+    flex: 1;
+    background-color: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    overflow: auto;
+}
+
+/* Task Heading */
+.taskHeading {
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}

@@ -63,66 +63,68 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className={styles.container}>
-      {isLogin ? (
-        <div className={styles.formContainer}>
-          <h2 className={styles.formTitle}>Login</h2>
-          <form onSubmit={handleLogin}>
-            <div className={styles.formGroup}>
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" name="email" required />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" name="password" required />
-            </div>
-            <button type="submit" className={styles.button}>
-              Login
-            </button>
-            <div className={styles.toggleLink}>
-              Don&apos;t have an account?{" "}
-              <a href="#" onClick={toggleForms}>
-                Sign up
-              </a>
-            </div>
-          </form>
-        </div>
-      ) : (
-        <div className={styles.formContainer}>
-          <h2 className={styles.formTitle}>Sign Up</h2>
-          <form onSubmit={handleSignup}>
-            <div className={styles.formGroup}>
-              <label htmlFor="name">Name</label>
-              <input type="text" id="name" name="name" required />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="dob">Date of Birth</label>
-              <input type="date" id="dob" name="dob" required />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="phone">Phone</label>
-              <input type="tel" id="phone" name="phone" required />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" name="email" required />
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="password">Password</label>
-              <input type="password" id="password" name="password" required />
-            </div>
-            <button type="submit" className={styles.button}>
-              Sign Up
-            </button>
-            <div className={styles.toggleLink}>
-              Already have an account?{" "}
-              <a href="#" onClick={toggleForms}>
+    <div className={styles.marginauto}>
+      <div className={styles.container}>
+        {isLogin ? (
+          <div className={styles.formContainer}>
+            <h2 className={styles.formTitle}>Login</h2>
+            <form onSubmit={handleLogin}>
+              <div className={styles.formGroup}>
+                <label htmlFor="email">Email</label>
+                <input type="email" id="email" name="email" required />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="password">Password</label>
+                <input type="password" id="password" name="password" required />
+              </div>
+              <button type="submit" className={styles.button}>
                 Login
-              </a>
-            </div>
-          </form>
-        </div>
-      )}
+              </button>
+              <div className={styles.toggleLink}>
+                Don&apos;t have an account?{" "}
+                <a href="#" onClick={toggleForms}>
+                  Sign up
+                </a>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <div className={styles.formContainer}>
+            <h2 className={styles.formTitle}>Sign Up</h2>
+            <form onSubmit={handleSignup}>
+              <div className={styles.formGroup}>
+                <label htmlFor="name">Name</label>
+                <input type="text" id="name" name="name" required />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" required />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="email">Email</label>
+                <input type="email" id="email" name="email" required />
+              </div>
+              <div className={styles.formGroup}>
+                <label htmlFor="password">Password</label>
+                <input type="password" id="password" name="password" required />
+              </div>
+              <button type="submit" className={styles.button}>
+                Sign Up
+              </button>
+              <div className={styles.toggleLink}>
+                Already have an account?{" "}
+                <a href="#" onClick={toggleForms}>
+                  Login
+                </a>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
