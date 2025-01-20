@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllProjects, addProject } = require('../controllers/projectController');
+const { getAllProjects, addProject, deleteProject } = require('../controllers/projectController');
 
 const router = express.Router();
 
@@ -8,5 +8,8 @@ router.get('/', getAllProjects);
 
 // POST to add a new project
 router.post('/', addProject);
+
+// DELETE project by ID
+router.delete('/:id', deleteProject);  // Add this line to handle DELETE request for project deletion
 
 module.exports = router;
