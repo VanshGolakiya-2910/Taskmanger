@@ -52,7 +52,7 @@ const LoginSignup = () => {
 
       if (response.ok) {
         alert("Registration successful!");
-        navigate("/Chat", { state: { email } }); // Redirect to Chat with email state
+        navigate("/home", { state: { email: email.trim() } }); // Redirect to Chat with email state
       } else {
         throw new Error("Failed to register user");
       }

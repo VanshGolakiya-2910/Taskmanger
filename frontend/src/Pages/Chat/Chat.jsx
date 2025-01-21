@@ -13,7 +13,6 @@ const ChatComponent = () => {
   const [messages, setMessages] = useState([]); // Chat messages
   const [message, setMessage] = useState(''); // Message input
   const [taskName, setTaskName] = useState('');
-  console.log(taskName)
   // Retrieve email and taskId from location state passed by navigate
   const location = useLocation();
   const { email, taskId } = location.state || {}; // Access email and taskId passed from LoginSignup

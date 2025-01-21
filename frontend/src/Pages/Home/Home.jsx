@@ -3,11 +3,15 @@ import styles from "./Home.module.css"; // Importing module CSS
 import CustomCalendar from "../../Components/CutomCalendar/CustomCalendar";
 import axios from "axios";
 import { TaskCard } from "../../Components/TaskCard/TaskCard";
-import { Link } from "react-router-dom";
-
+import { useLocation, Link, useNavigate } from "react-router-dom";
+// const navigate = Link
 const Homepage = () => {
   const [tasks, setTasks] = useState([]);
   const [priorityTasks, setPriorityTasks] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const email = location.state?.email || "Guest";
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -25,6 +29,10 @@ const Homepage = () => {
     fetchTasks();
   }, []);
 
+    const handleChatNavigation = () =>{
+      navigate("/Chat",{state:{email}});
+    };
+
   return (
     
     <div className={styles.container}>
@@ -40,7 +48,8 @@ const Homepage = () => {
           <li className={styles.navItem}>
             <Link to="/project">Project</Link>
           </li>
-          <li className={styles.navItem}>Notification</li>
+          <li className={styles.navItem} onClick={handleChatNavigation}>Chat
+          </li>
           <li className={styles.navItem}>Settings</li>
         </ul>
       </div>
