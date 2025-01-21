@@ -1,0 +1,44 @@
+.sidebar {
+    background-color: #f8f8fb;
+    display: flex;
+    width: 20%;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: start;
+    color: #000;
+    text-align: right;
+    padding: 25px 75px 652px 20px;
+    font: 400 18px/1 Rubik, sans-serif;
+  }
+  
+  @media (max-width: 991px) {
+    .sidebar {
+      width: 100%;
+      padding: 0 20px 100px 0;
+    }
+  }
+  
+  .sidebarHeader {
+    font-size: 40px;
+    line-height: 0.5;
+  }
+  
+  .menuTitle {
+    font-size: 36px;
+    line-height: 1;
+    margin: 149px 0 0 71px;
+  }
+  
+  .menuItem {
+    display: flex;
+    gap: 28px;
+    white-space: nowrap;
+    margin: 30px 0 0 39px;
+  }
+  
+  .menuIcon {
+    width: 17px;
+    height: 15px;
+    margin: auto 0;
+  }
+  

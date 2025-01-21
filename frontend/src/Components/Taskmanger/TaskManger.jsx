@@ -1,31 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../../api/api';
-import './TaskManger.module.css';
+import { api } from '../../api/api';  // Ensure this path is correct for your project structure
+import './TaskManager.module.css';
 
-const TaskManager = () => {
+const TaskManager = ({ projectId }) => {
     const [tasks, setTasks] = useState([]);
     const [form, setForm] = useState({
         taskName: '',
         assignedOn: '',
         dueDate: '',
-        projectId: '',
         status: '',
         priority: ''
     });
+    const [notification, setNotification] = useState('');  // New state for notification
 
+    // Fetch tasks when component mounts
     useEffect(() => {
         fetchTasks();
     }, []);
 
+    // Fetch tasks from the backend
     const fetchTasks = async () => {
         try {
             const response = await api.get('http://localhost:5000/api/tasks');
-            setTasks(response.data);  // Store the tasks in state
+            setTasks(response.data);  // Store tasks in state
         } catch (error) {
             console.error('Error fetching tasks:', error);
         }
     };
 
+    // Handle form submission for adding a task
     const handleSubmit = async (e) => {
         e.preventDefault();
         
@@ -33,9 +36,9 @@ const TaskManager = () => {
             Task_Name: form.taskName,
             Assigned_On: form.assignedOn,
             Due_Date: form.dueDate,
-            Project_ID: form.projectId,
             Status: form.status,
-            Priority: form.priority
+            Priority: form.priority,
+            Project_ID: projectId  // Use current project ID
         };
 
         try {
@@ -44,11 +47,12 @@ const TaskManager = () => {
                 taskName: '',
                 assignedOn: '',
                 dueDate: '',
-                projectId: '',
                 status: '',
                 priority: ''
             });  // Reset form
             fetchTasks();  // Fetch tasks again to show updated list
+            setNotification('Task is added');  // Show success notification
+            setTimeout(() => setNotification(''), 3000);  // Hide notification after 3 seconds
         } catch (error) {
             console.error('Error adding task:', error);
         }
@@ -57,6 +61,7 @@ const TaskManager = () => {
     return (
         <div className="task-manager">
             <h1>Task Manager</h1>
+            {notification && <div className="notification">{notification}</div>} {/* Show notification */}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -79,13 +84,6 @@ const TaskManager = () => {
                 />
                 <input
                     type="text"
-                    placeholder="Project ID"
-                    value={form.projectId}
-                    onChange={(e) => setForm({ ...form, projectId: e.target.value })}
-                    required
-                />
-                <input
-                    type="text"
                     placeholder="Status"
                     value={form.status}
                     onChange={(e) => setForm({ ...form, status: e.target.value })}
@@ -100,19 +98,6 @@ const TaskManager = () => {
                 />
                 <button type="submit">Add Task</button>
             </form>
-
-            <ul>
-                {tasks.map((task) => (
-                    <li key={task.Task_ID}>
-                        <h3>{task.Task_Name}</h3>
-                        <p>Assigned On: {new Date(task.Assigned_On).toLocaleDateString()}</p>
-                        <p>Due Date: {new Date(task.Due_Date).toLocaleDateString()}</p>
-                        <p>Project ID: {task.Project_ID}</p>
-                        <p>Status: {task.Status}</p>
-                        <p>Priority: {task.Priority}</p>
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 };
