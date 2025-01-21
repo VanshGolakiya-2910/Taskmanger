@@ -25,7 +25,7 @@ const LoginSignup = () => {
       if (response.ok) {
         alert("Login successful!");
         // Passing email as state during navigation to /Chat
-        navigate("/Chat", { state: { email } });
+        navigate("/home", { state: { email } });
       } else {
         alert(msg);
       }

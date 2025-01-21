@@ -22,7 +22,7 @@ function ProjectDetails() {
     const fetchProjectDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/projects/${id}`
+          `http://localhost:5000/api/project/${id}`
         );
         setProject(response.data);
         const tasksResponse = await axios.get(
