@@ -24,7 +24,8 @@ const LoginSignup = () => {
       const msg = await response.text();
       if (response.ok) {
         alert("Login successful!");
-        navigate("/home"); // Redirect to Home page
+        // Passing email as state during navigation to /Chat
+        navigate("/Chat", { state: { email } });
       } else {
         alert(msg);
       }
@@ -50,9 +51,8 @@ const LoginSignup = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
         alert("Registration successful!");
-        navigate("/home"); // Redirect to Home page
+        navigate("/Chat", { state: { email } }); // Redirect to Chat with email state
       } else {
         throw new Error("Failed to register user");
       }

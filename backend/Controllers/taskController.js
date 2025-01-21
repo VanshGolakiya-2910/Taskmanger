@@ -37,5 +37,21 @@ const addTask = (req, res) => {
     });
   });
 };
+const getTaskNameById = (req, res) => {
+  const { taskId } = req.params;
 
-module.exports = { getAllTasks, addTask }; // Make sure both functions are exported
+  const query = 'SELECT Task_Name FROM task WHERE Task_ID = ?';
+  db.query(query, [taskId], (err, results) => {
+    if (err) {
+      console.error('Error fetching Task Name:', err.message);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    if (results.length > 0) {
+      return res.status(200).json({ taskName: results[0].Task_Name });
+    } else {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+  });
+};
+
+module.exports = { getAllTasks, addTask, getTaskNameById };
