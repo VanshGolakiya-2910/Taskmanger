@@ -71,4 +71,4 @@ const getTaskNameById = (req, res) => {
   });
 };
 
-module.exports = { getAllTasks, addTask, getTaskNameById };
+module.exports = { getAllTasks, addTask, getTaskNameById , getTasksByProject};

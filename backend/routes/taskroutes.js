@@ -7,5 +7,5 @@ const router = express.Router();
 router.get('/', getAllTasks);  // Handle GET requests at /api/tasks
 router.get('/project/:projectId', getTasksByProject); // Handle GET requests for tasks by project ID
 router.post('/', addTask);     // Handle POST requests at /api/tasks
-router.get('/task-name/:taskID', getTaskNameById) 
+router.get('/task-name/:taskId', getTaskNameById);
 module.exports = router;

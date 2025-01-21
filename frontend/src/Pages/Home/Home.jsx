@@ -11,7 +11,7 @@ const Homepage = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      try {
+      try { 
         const response = await axios.get("http://localhost:5000/api/tasks");
         const allTasks = response.data;
         const priorityTasks = allTasks.filter((task) => task.Priority === 1);
