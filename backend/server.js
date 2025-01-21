@@ -4,7 +4,7 @@ const taskRoutes = require('./routes/taskRoutes'); // Task routes
 const authRoutes = require('./routes/authRoutes'); // Auth routes
 const projectRoutes = require('./routes/projectRoutes'); // Project routes
 const projectDetailRoutes = require('./routes/projectDetailRoutes'); // Project detail routes
-
+const userRoutes = require('./routes/userRoutes');
 const app = express();
 
 // Middleware
@@ -22,6 +22,7 @@ app.use('/api/tasks', taskRoutes); // Task-related routes
 app.use('/api/auth', authRoutes); // Auth-related routes
 app.use('/api/project', projectRoutes); // Project-related routes
 app.use('/api', projectDetailRoutes); // Project detail-related routes
+app.use('/api/users', userRoutes);  // Use the user routes for /api/users endpoint
 
 // Root URL for testing
 app.get('/', (req, res) => {

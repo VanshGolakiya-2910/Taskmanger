@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';  // Import Link from react-router-dom
 import './Project.css';
-
+import { Sidebar } from '../../Components/Sidebar/Sidebar';
 const Projects = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [projects, setProjects] = useState([]);
@@ -83,17 +83,7 @@ const Projects = () => {
 
     return (
         <div className="container">
-            {/* Sidebar */}
-            <div className="sidebar">
-                <div className="logo">Task Manager</div>
-                <ul className="nav-items">
-                    <li className="nav-item">Home    
-                    </li>
-                    <li className="nav-item">Project</li>
-                    <li className="nav-item">Chat</li>
-                    <li className="nav-item">Setting</li>
-                </ul>
-            </div>
+           <Sidebar></Sidebar>
 
             {/* Main Content */}
             <div className="main-content">
