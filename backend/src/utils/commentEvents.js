@@ -1,3 +1,8 @@
+import { emitToProject } from "../realtime/events.js";
+
 export const emitCommentCreated = ({ projectId, taskId, comment }) => {
-  // websocket.emit("comment:created", ...)
+  emitToProject(projectId, "comment:created", {
+    taskId,
+    comment,
+  });
 };
