@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticate } from "../middlewares/auth.middleware.js";
-import { authorizeRoles } from "../middlewares/role.middleware.js";
+import { projectScope } from "../middlewares/projectScope.middleware.js";
 import {
   createProject,
   addProjectMember,
@@ -10,31 +10,28 @@ import {
 
 const router = express.Router();
 
-router.post(
-  "/",
-  authenticate,
-  authorizeRoles("manager"),
-  createProject
-);
+// Create project (no projectScope yet)
+router.post("/", authenticate, createProject);
 
+// Project member management
 router.post(
   "/:projectId/members",
   authenticate,
-  authorizeRoles("manager", "project_manager"),
+  projectScope,
   addProjectMember
 );
 
 router.delete(
   "/:projectId/members/:userId",
   authenticate,
-  authorizeRoles("manager", "project_manager"),
+  projectScope,
   removeProjectMember
 );
 
-router.patch(
+router.post(
   "/:projectId/transfer",
   authenticate,
-  authorizeRoles("manager"),
+  projectScope,
   transferOwnership
 );
 

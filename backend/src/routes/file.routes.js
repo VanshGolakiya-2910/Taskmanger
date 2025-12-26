@@ -1,5 +1,6 @@
 import express from "express";
 import { authenticate } from "../middlewares/auth.middleware.js";
+import { projectScope } from "../middlewares/projectScope.middleware.js";
 import { upload } from "../config/multer.js";
 import {
   uploadFile,
@@ -9,8 +10,9 @@ import {
 const router = express.Router();
 
 router.post(
-  "/upload",
+  "/projects/:projectId/upload",
   authenticate,
+  projectScope,
   upload.single("file"),
   uploadFile
 );

@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticate } from "../middlewares/auth.middleware.js";
-import { authorizeRoles } from "../middlewares/role.middleware.js";
+import { projectScope } from "../middlewares/projectScope.middleware.js";
 import {
   createTask,
   updateTaskStatus,
@@ -10,22 +10,21 @@ import {
 const router = express.Router();
 
 router.post(
-  "/",
+  "/projects/:projectId/tasks",
   authenticate,
-  authorizeRoles("manager", "project_manager"),
+  projectScope,
   createTask
 );
 
 router.patch(
-  "/:taskId/status",
+  "/tasks/:taskId/status",
   authenticate,
   updateTaskStatus
 );
 
 router.delete(
-  "/:taskId",
+  "/tasks/:taskId",
   authenticate,
-  authorizeRoles("manager", "project_manager"),
   deleteTask
 );
 

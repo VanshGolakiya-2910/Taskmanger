@@ -1,5 +1,6 @@
 import express from "express";
 import { authenticate } from "../middlewares/auth.middleware.js";
+import { projectScope } from "../middlewares/projectScope.middleware.js";
 import {
   addComment,
   getTaskComments,
@@ -7,16 +8,17 @@ import {
 
 const router = express.Router();
 
-// /api/v1/comments/task/:taskId
 router.post(
-  "/task/:taskId",
+  "/projects/:projectId/tasks/:taskId/comments",
   authenticate,
+  projectScope,
   addComment
 );
 
 router.get(
-  "/task/:taskId",
+  "/projects/:projectId/tasks/:taskId/comments",
   authenticate,
+  projectScope,
   getTaskComments
 );
 
