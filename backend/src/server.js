@@ -1,15 +1,15 @@
-import "./service/preload.service.js";
-import express from "express";
+import "./services/preload.service.js"
+import app from "./app.js";
 import { runMigrations } from "./config/runMigrations.js";
 
 
-
-const app = express();
 
 (async () => {
   await runMigrations();
 })();
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log("Server running");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
