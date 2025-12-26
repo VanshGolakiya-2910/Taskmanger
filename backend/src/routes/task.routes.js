@@ -1,9 +1,32 @@
-const express = require('express');
-const { getAllTasks, addTask, } = require('../Controllers/taskController');
+import express from "express";
+import { authenticate } from "../middlewares/auth.middleware.js";
+import { authorizeRoles } from "../middlewares/role.middleware.js";
+import {
+  createTask,
+  updateTaskStatus,
+  deleteTask,
+} from "../controllers/task.controller.js";
+
 const router = express.Router();
 
-router.post("/", createTask);
-router.get('/tasks', getAllTasks);
-router.post('/tasks', addTask);  // Add this line to handle POST requests
+router.post(
+  "/",
+  authenticate,
+  authorizeRoles("manager", "project_manager"),
+  createTask
+);
 
-module.exports = router;
+router.patch(
+  "/:taskId/status",
+  authenticate,
+  updateTaskStatus
+);
+
+router.delete(
+  "/:taskId",
+  authenticate,
+  authorizeRoles("manager", "project_manager"),
+  deleteTask
+);
+
+export default router;
