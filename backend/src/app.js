@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import morgan from "morgan";
 // Routes
 import authRoutes from "./routes/auth.routes.js";
 import projectRoutes from "./routes/project.routes.js";
@@ -25,6 +25,7 @@ app.use(
   })
 );
 
+app.use(morgan("dev"));
 // Parse JSON request bodies
 app.use(express.json());
 

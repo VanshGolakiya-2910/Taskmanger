@@ -1,0 +1,229 @@
+{
+  "info": {
+    "name": "Task Manager API – FINAL CLEAN TEST SUITE",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Complete test coverage for Auth, Projects, Tasks, Comments, Files with RBAC and validation"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api/v1" }
+  ],
+  "item": [
+
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "Register Manager",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\":\"manager@test.com\",\"password\":\"pass123\",\"role\":\"manager\" }" }
+          }
+        },
+        {
+          "name": "Register PM",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\":\"pm@test.com\",\"password\":\"pass123\",\"role\":\"project_manager\" }" }
+          }
+        },
+        {
+          "name": "Register Member",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/register",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\":\"member@test.com\",\"password\":\"pass123\",\"role\":\"member\" }" }
+          }
+        },
+        {
+          "name": "Login Manager",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\":\"manager@test.com\",\"password\":\"pass123\" }" }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.environment.set('managerToken', pm.response.json().data.accessToken);"] }
+          }]
+        },
+        {
+          "name": "Login PM",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\":\"pm@test.com\",\"password\":\"pass123\" }" }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.environment.set('pmToken', pm.response.json().data.accessToken);"] }
+          }]
+        },
+        {
+          "name": "Login Member",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"email\":\"member@test.com\",\"password\":\"pass123\" }" }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.environment.set('memberToken', pm.response.json().data.accessToken);"] }
+          }]
+        }
+      ]
+    },
+
+    {
+      "name": "PROJECTS",
+      "item": [
+        {
+          "name": "Create Project (Manager)",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/projects",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{managerToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"name\":\"Project Alpha\" }" }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.environment.set('projectId', pm.response.json().data.id);"] }
+          }]
+        },
+        {
+          "name": "Member Cannot Create Project",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/projects",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{memberToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"name\":\"Illegal\" }" }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "TASKS",
+      "item": [
+        {
+          "name": "Create Task",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/tasks/project/{{projectId}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{pmToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"title\":\"Task 1\",\"assignedTo\":3,\"description\":\"Init\",\"status\":\"todo\" }"
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.environment.set('taskId', pm.response.json().data.id);"] }
+          }]
+        },
+        {
+          "name": "Update Task Status",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/tasks/{{taskId}}/status",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{memberToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"status\":\"in_progress\" }" }
+          }
+        },
+        {
+          "name": "Delete Task (Manager)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/tasks/{{taskId}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{managerToken}}" }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "COMMENTS",
+      "item": [
+        {
+          "name": "Add Comment",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/comments/task/{{taskId}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{memberToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{ \"content\":\"Looks good\" }" }
+          }
+        },
+        {
+          "name": "Get Comments",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/comments/task/{{taskId}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{memberToken}}" }
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "FILES",
+      "item": [
+        {
+          "name": "Upload File",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/files/project/{{projectId}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{managerToken}}" }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "file", "type": "file", "src": "/tmp/test.txt" }
+              ]
+            }
+          },
+          "event": [{
+            "listen": "test",
+            "script": { "exec": ["pm.environment.set('fileId', pm.response.json().data.id);"] }
+          }]
+        },
+        {
+          "name": "Delete File",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/files/{{fileId}}",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{managerToken}}" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

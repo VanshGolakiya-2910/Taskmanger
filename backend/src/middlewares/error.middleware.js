@@ -1,23 +1,26 @@
 import { ApiError } from "../utils/ApiError.js";
 
 export const errorHandler = (err, req, res, next) => {
-  let statusCode = err.statusCode || 500;
-  let message = err.message || "Internal Server Error";
+  // Always log the real error (server-side)
+  console.error("ERROR:", err);
 
-  // MySQL errors
-  if (err.code === "ER_DUP_ENTRY") {
-    statusCode = 409;
-    message = "Duplicate entry";
-  }
+  // Respect ApiError statusCode
+  const statusCode =
+    err instanceof ApiError
+      ? err.statusCode
+      : 500;
 
-  // Validation errors
-  if (err.name === "ValidationError") {
-    statusCode = 400;
-  }
-
-  res.status(statusCode).json({
+  const response = {
     success: false,
     statusCode,
-    message,
-  });
+    message: err.message || "Internal server error",
+    errors: err.errors || []
+  };
+
+  // Expose stack ONLY in development
+  if (process.env.NODE_ENV !== "production") {
+    response.stack = err.stack;
+  }
+
+  res.status(statusCode).json(response);
 };
