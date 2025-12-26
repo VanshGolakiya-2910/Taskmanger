@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 // Routes
 import authRoutes from "./routes/auth.routes.js";
 import projectRoutes from "./routes/project.routes.js";
+import taskRoutes from "./routes/task.routes.js";
+import commentRoutes from "./routes/comment.routes.js";
 // (tasks, files, comments will be added later)
 
 const app = express();
@@ -27,8 +29,11 @@ app.use(cookieParser());
 
 /* -------------------- ROUTES -------------------- */
 
-app.use("/api/auth", authRoutes);
-app.use("/api/projects", projectRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/projects", projectRoutes);
+app.use("/api/v1/tasks", taskRoutes);
+app.use("/api/v1/comments", commentRoutes);
+
 
 // Health check
 app.get("/", (req, res) => {
