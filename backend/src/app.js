@@ -9,6 +9,9 @@ import taskRoutes from "./routes/task.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
 // (tasks, files, comments will be added later)
 
+//middlewares
+import { errorHandler } from "./middlewares/error.middleware.js";
+
 const app = express();
 
 /* -------------------- GLOBAL MIDDLEWARES -------------------- */
@@ -55,5 +58,7 @@ app.use((err, req, res, next) => {
     message: "Internal server error",
   });
 });
+
+app.use(errorHandler);
 
 export default app;
