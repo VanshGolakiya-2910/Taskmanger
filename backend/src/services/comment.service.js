@@ -1,65 +1,96 @@
 import pool from "../config/db.js";
+import { ApiError } from "../utils/ApiError.js";
 import { emitCommentCreated } from "../utils/commentEvents.js";
 
+/* -------------------- CREATE COMMENT -------------------- */
+
 export const createCommentService = async ({ user, taskId, content }) => {
-  // Verify task exists and get project scope
-  const [[task]] = await pool.query(
-    "SELECT project_id FROM tasks WHERE id = ?",
-    [taskId]
-  );
+  const connection = await pool.getConnection();
 
-  if (!task) throw new Error("TASK_NOT_FOUND");
+  try {
+    await connection.beginTransaction();
 
-  // Ensure user is a member of the project
-  const [[member]] = await pool.query(
-    `SELECT 1 FROM project_members
-     WHERE project_id = ? AND user_id = ?`,
-    [task.project_id, user.id]
-  );
+    // Verify task exists
+    const [[task]] = await connection.query(
+      "SELECT project_id FROM tasks WHERE id = ?",
+      [taskId]
+    );
 
-  if (!member) throw new Error("FORBIDDEN");
+    if (!task) {
+      throw new ApiError(404, "Task not found");
+    }
 
-  const [result] = await pool.query(
-    `INSERT INTO comments (task_id, user_id, content)
-     VALUES (?, ?, ?)`,
-    [taskId, user.id, content]
-  );
+    // Ensure user is a project member
+    const [[member]] = await connection.query(
+      `SELECT 1 FROM project_members
+       WHERE project_id = ? AND user_id = ?`,
+      [task.project_id, user.id]
+    );
 
-  const comment = {
-    id: result.insertId,
-    taskId,
-    userId: user.id,
-    content,
-  };
+    if (!member) {
+      throw new ApiError(403, "Forbidden");
+    }
 
-  emitCommentCreated({
-    projectId: task.project_id,
-    taskId,
-    comment,
-  });
+    const [result] = await connection.query(
+      `INSERT INTO comments (task_id, user_id, content)
+       VALUES (?, ?, ?)`,
+      [taskId, user.id, content]
+    );
 
-  return comment;
+    const comment = {
+      id: result.insertId,
+      taskId,
+      userId: user.id,
+      content,
+    };
+
+    await connection.commit();
+
+    emitCommentCreated({
+      projectId: task.project_id,
+      taskId,
+      comment,
+    });
+
+    return comment;
+  } catch (err) {
+    await connection.rollback();
+    throw err;
+  } finally {
+    connection.release();
+  }
 };
 
+/* -------------------- GET TASK COMMENTS -------------------- */
+
 export const getTaskCommentsService = async ({ user, taskId }) => {
-  // Verify membership via project
+  // Verify task exists
   const [[task]] = await pool.query(
     "SELECT project_id FROM tasks WHERE id = ?",
     [taskId]
   );
 
-  if (!task) throw new Error("TASK_NOT_FOUND");
+  if (!task) {
+    throw new ApiError(404, "Task not found");
+  }
 
+  // Verify membership
   const [[member]] = await pool.query(
     `SELECT 1 FROM project_members
      WHERE project_id = ? AND user_id = ?`,
     [task.project_id, user.id]
   );
 
-  if (!member) throw new Error("FORBIDDEN");
+  if (!member) {
+    throw new ApiError(403, "Forbidden");
+  }
 
   const [comments] = await pool.query(
-    `SELECT c.id, c.content, c.created_at, u.email AS author
+    `SELECT
+       c.id,
+       c.content,
+       c.created_at,
+       u.email AS author
      FROM comments c
      JOIN users u ON u.id = c.user_id
      WHERE c.task_id = ?

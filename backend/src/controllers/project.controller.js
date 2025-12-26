@@ -1,3 +1,5 @@
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import {
   createProjectService,
   addProjectMemberService,
@@ -5,60 +7,55 @@ import {
   transferProjectOwnershipService,
 } from "../services/project.service.js";
 
-export const createProject = async (req, res) => {
-  try {
-    const project = await createProjectService({
-      userId: req.user.id,
-      name: req.body.name,
-    });
+/* -------------------- CREATE PROJECT -------------------- */
 
-    res.status(201).json(project);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Project creation failed" });
-  }
-};
+export const createProject = asyncHandler(async (req, res) => {
+  const project = await createProjectService({
+    userId: req.user.id,
+    name: req.body.name,
+  });
 
-export const addProjectMember = async (req, res) => {
-  try {
-    await addProjectMemberService({
-      projectId: req.params.projectId,
-      targetUserId: req.body.userId,
-      role: req.body.role,
-    });
+  res
+    .status(201)
+    .json(new ApiResponse(201, project, "Project created"));
+});
 
-    res.status(200).json({ message: "Member added" });
-  } catch (err) {
-    if (err.message === "INVALID_PROJECT_ROLE") {
-      return res.status(400).json({ message: "Invalid project role" });
-    }
+/* -------------------- ADD PROJECT MEMBER -------------------- */
 
-    res.status(500).json({ message: "Failed to add member" });
-  }
-};
+export const addProjectMember = asyncHandler(async (req, res) => {
+  await addProjectMemberService({
+    projectId: req.params.projectId,
+    targetUserId: req.body.userId,
+    role: req.body.role,
+  });
 
-export const removeProjectMember = async (req, res) => {
-  try {
-    await removeProjectMemberService({
-      projectId: req.params.projectId,
-      targetUserId: req.params.userId,
-    });
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Member added"));
+});
 
-    res.status(200).json({ message: "Member removed" });
-  } catch (err) {
-    res.status(500).json({ message: "Failed to remove member" });
-  }
-};
+/* -------------------- REMOVE PROJECT MEMBER -------------------- */
 
-export const transferOwnership = async (req, res) => {
-  try {
-    await transferProjectOwnershipService({
-      projectId: req.params.projectId,
-      newManagerId: req.body.newManagerId,
-    });
+export const removeProjectMember = asyncHandler(async (req, res) => {
+  await removeProjectMemberService({
+    projectId: req.params.projectId,
+    targetUserId: req.params.userId,
+  });
 
-    res.status(200).json({ message: "Ownership transferred" });
-  } catch (err) {
-    res.status(500).json({ message: "Transfer failed" });
-  }
-};
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Member removed"));
+});
+
+/* -------------------- TRANSFER OWNERSHIP -------------------- */
+
+export const transferOwnership = asyncHandler(async (req, res) => {
+  await transferProjectOwnershipService({
+    projectId: req.params.projectId,
+    newManagerId: req.body.newManagerId,
+  });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Ownership transferred"));
+});

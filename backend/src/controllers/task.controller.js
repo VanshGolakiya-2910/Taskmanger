@@ -1,3 +1,5 @@
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import {
   createTaskService,
   updateTaskStatusService,
@@ -8,44 +10,40 @@ import {
   validateStatusUpdate,
 } from "../validators/task.validator.js";
 
-export const createTask = async (req, res) => {
-  try {
-    validateCreateTask(req.body);
+/* -------------------- CREATE TASK -------------------- */
 
-    const task = await createTaskService(req.user, req.body);
-    res.status(201).json(task);
-  } catch (err) {
-    if (err.message === "FORBIDDEN") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    res.status(400).json({ message: "Task creation failed" });
-  }
-};
+export const createTask = asyncHandler(async (req, res) => {
+  validateCreateTask(req.body);
 
-export const updateTaskStatus = async (req, res) => {
-  try {
-    validateStatusUpdate(req.body);
+  const task = await createTaskService(req.user, req.body);
 
-    await updateTaskStatusService(
-      req.user,
-      req.params.taskId,
-      req.body.status
-    );
+  res
+    .status(201)
+    .json(new ApiResponse(201, task, "Task created"));
+});
 
-    res.status(200).json({ message: "Status updated" });
-  } catch (err) {
-    if (["FORBIDDEN", "INVALID_TRANSITION"].includes(err.message)) {
-      return res.status(403).json({ message: err.message });
-    }
-    res.status(404).json({ message: "Task not found" });
-  }
-};
+/* -------------------- UPDATE TASK STATUS -------------------- */
 
-export const deleteTask = async (req, res) => {
-  try {
-    await deleteTaskService(req.user, req.params.taskId);
-    res.status(200).json({ message: "Task deleted" });
-  } catch (err) {
-    res.status(403).json({ message: "Forbidden" });
-  }
-};
+export const updateTaskStatus = asyncHandler(async (req, res) => {
+  validateStatusUpdate(req.body);
+
+  await updateTaskStatusService(
+    req.user,
+    req.params.taskId,
+    req.body.status
+  );
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Status updated"));
+});
+
+/* -------------------- DELETE TASK -------------------- */
+
+export const deleteTask = asyncHandler(async (req, res) => {
+  await deleteTaskService(req.user, req.params.taskId);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Task deleted"));
+});

@@ -2,7 +2,7 @@ import "./services/preload.service.js"
 import app from "./app.js";
 import { runMigrations } from "./config/runMigrations.js";
 import http from "http";
-import { initSocketServer } from "./config/socketServer.js";
+import { initSocketServer } from "./realtime/socket.server.js";
 
 const server = http.createServer(app);
 

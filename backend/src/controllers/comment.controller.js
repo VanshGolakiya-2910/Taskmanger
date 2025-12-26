@@ -1,43 +1,36 @@
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import {
   createCommentService,
   getTaskCommentsService,
 } from "../services/comment.service.js";
 import { validateCreateComment } from "../validators/comment.validator.js";
 
-export const addComment = async (req, res) => {
-  try {
-    validateCreateComment(req.body);
+/* -------------------- ADD COMMENT -------------------- */
 
-    const comment = await createCommentService({
-      user: req.user,
-      taskId: req.params.taskId,
-      content: req.body.content,
-    });
+export const addComment = asyncHandler(async (req, res) => {
+  validateCreateComment(req.body);
 
-    res.status(201).json(comment);
-  } catch (err) {
-    if (["FORBIDDEN"].includes(err.message)) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    if (err.message === "TASK_NOT_FOUND") {
-      return res.status(404).json({ message: "Task not found" });
-    }
-    res.status(400).json({ message: "Failed to add comment" });
-  }
-};
+  const comment = await createCommentService({
+    user: req.user,
+    taskId: req.params.taskId,
+    content: req.body.content,
+  });
 
-export const getTaskComments = async (req, res) => {
-  try {
-    const comments = await getTaskCommentsService({
-      user: req.user,
-      taskId: req.params.taskId,
-    });
+  res
+    .status(201)
+    .json(new ApiResponse(201, comment, "Comment added"));
+});
 
-    res.status(200).json(comments);
-  } catch (err) {
-    if (["FORBIDDEN"].includes(err.message)) {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-    res.status(404).json({ message: "Task not found" });
-  }
-};
+/* -------------------- GET TASK COMMENTS -------------------- */
+
+export const getTaskComments = asyncHandler(async (req, res) => {
+  const comments = await getTaskCommentsService({
+    user: req.user,
+    taskId: req.params.taskId,
+  });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, comments, "Comments fetched"));
+});
