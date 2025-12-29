@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../api/auth.api";
 import { AuthContext } from "./auth.context";
+import { disconnectSocket } from "../sockets/socket";
 import type { User } from "../types/user";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -14,6 +15,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUser(me);
     } catch {
       setUser(null);
+      disconnectSocket(); 
     } finally {
       setIsLoading(false);
     }
