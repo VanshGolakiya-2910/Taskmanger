@@ -5,6 +5,7 @@ import {
   addProjectMemberService,
   removeProjectMemberService,
   transferProjectOwnershipService,
+  getUserProjectsService,
 } from "../services/project.service.js";
 
 /* -------------------- CREATE PROJECT -------------------- */
@@ -58,4 +59,12 @@ export const transferOwnership = asyncHandler(async (req, res) => {
   res
     .status(200)
     .json(new ApiResponse(200, null, "Ownership transferred"));
+});
+
+export const getMyProjects = asyncHandler(async (req, res) => {
+  const projects = await getUserProjectsService(req.user.id);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, projects, "Projects fetched"));
 });

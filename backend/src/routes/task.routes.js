@@ -5,6 +5,9 @@ import {
   createTask,
   updateTaskStatus,
   deleteTask,
+  getAllProjectTasks,
+  getMyAssignedTasks,
+  getTaskById 
 } from "../controllers/task.controller.js";
 
 const router = express.Router();
@@ -25,21 +28,44 @@ router.post(
  * PATCH /api/v1/tasks/:taskId/status
  */
 router.patch(
-  "/:taskId/status",
+  "/project/:projectId/:taskId/status",
   authenticate,
   projectScope,
   updateTaskStatus
 );
-
+  
 /**
  * Delete task
  * DELETE /api/v1/tasks/:taskId
  */
 router.delete(
-  "/:taskId",
+  "/project/:projectId/:taskId",
   authenticate,
   projectScope,
   deleteTask
 );
+
+router.get(
+  "/project/:projectId",
+  authenticate,
+  projectScope,
+  getAllProjectTasks
+);
+
+router.get(
+  "/project/:projectId/my",
+  authenticate,
+  projectScope,
+  getMyAssignedTasks
+);
+
+// Single task by id (project scoped)
+router.get(
+  "/project/:projectId/:taskId",
+  authenticate,
+  projectScope,
+  getTaskById
+);
+
 
 export default router;

@@ -1,6 +1,8 @@
-export const validateCreateTask = ({ title, assignedTo, projectId }) => {
-  if (!title || !assignedTo || !projectId) {
-    throw new Error("INVALID_TASK_DATA");
+export const validateCreateTask = (data) => {
+  const { title, assignedTo } = data;
+
+  if (!title || !assignedTo) {
+    throw new ApiError(400, 'INVALID_TASK_DATA');
   }
 };
 

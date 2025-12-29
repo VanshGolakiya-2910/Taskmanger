@@ -141,3 +141,23 @@ export const transferProjectOwnershipService = async ({
     connection.release();
   }
 };
+
+/* -------------------- GET USER PROJECTS -------------------- */
+export const getUserProjectsService = async (userId) => {
+  const [projects] = await pool.query(
+    `
+    SELECT
+      p.id,
+      p.name,
+      p.created_at,
+      pm.project_role AS role_in_project
+    FROM project_members pm
+    JOIN projects p ON p.id = pm.project_id
+    WHERE pm.user_id = ?
+    ORDER BY p.created_at DESC
+    `,
+    [userId]
+  );
+
+  return projects;
+};

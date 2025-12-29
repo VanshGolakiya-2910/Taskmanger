@@ -8,6 +8,7 @@ import projectRoutes from "./routes/project.routes.js";
 import taskRoutes from "./routes/task.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
 import fileRoutes from "./routes/file.routes.js";
+import userRoutes from "./routes/user.routes.js";
 // (tasks, files, comments will be added later)
 
 //middlewares
@@ -28,7 +29,7 @@ app.use(
 app.use(morgan("dev"));
 // Parse JSON request bodies
 app.use(express.json());
-
+  
 // Parse cookies (for refresh token)
 app.use(cookieParser());
 
@@ -39,7 +40,7 @@ app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/tasks", taskRoutes);
 app.use("/api/v1/comments", commentRoutes);
 app.use("/api/v1/files", fileRoutes);
-
+app.use("/api/v1/users", userRoutes);
 
 // Health check
 app.get("/", (req, res) => {

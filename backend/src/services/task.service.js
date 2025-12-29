@@ -64,9 +64,13 @@ export const deleteTaskService = async (user, taskId) => {
   await pool.query("DELETE FROM tasks WHERE id = ?", [taskId]);
 };
 
-export const createTaskService = async (user, data) => {
+export const createTaskService = async (user, project, data) => {
   if (!canManageTask(user.role)) {
     throw new ApiError(403, "Forbidden");
+  }
+
+  if (!data.title || !data.assignedTo) {
+    throw new ApiError(400, "INVALID_TASK_DATA");
   }
 
   const conn = await pool.getConnection();
@@ -74,23 +78,27 @@ export const createTaskService = async (user, data) => {
     await conn.beginTransaction();
 
     const [result] = await conn.query(
-      `INSERT INTO tasks
-       (title, description, assigned_to, project_id, created_by, due_date)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `
+      INSERT INTO tasks
+      (title, description, assigned_to, project_id, created_by, due_date)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `,
       [
         data.title,
         data.description || null,
         data.assignedTo,
-        data.projectId,
+        project.id,     // ✅ authoritative
         user.id,
-        data.dueDate || null,
+        data.dueDate || null
       ]
     );
 
     await conn.query(
-      `INSERT INTO task_history
-       (task_id, action, new_value, changed_by)
-       VALUES (?, 'created', 'backlog', ?)`,
+      `
+      INSERT INTO task_history
+      (task_id, action, new_value, changed_by)
+      VALUES (?, 'created', 'backlog', ?)
+      `,
       [result.insertId, user.id]
     );
 
@@ -104,3 +112,52 @@ export const createTaskService = async (user, data) => {
     conn.release();
   }
 };
+
+export const getAllProjectTasksService = async (user, project) => {
+  // All project members can view tasks
+  const [tasks] = await pool.query(
+    `
+    SELECT *
+    FROM tasks
+    WHERE project_id = ?
+    ORDER BY created_at DESC
+    `,
+    [project.id]
+  );
+
+  return tasks;
+};
+
+export const getMyAssignedTasksService = async (user, project) => {
+  const [tasks] = await pool.query(
+    `
+    SELECT *
+    FROM tasks
+    WHERE project_id = ?
+      AND assigned_to = ?
+    ORDER BY created_at DESC
+    `,
+    [project.id, user.id]
+  );
+
+  return tasks;
+};
+
+export const getTaskByIdService = async (user, project, taskId) => {
+  const [[task]] = await pool.query(
+    `
+    SELECT *
+    FROM tasks
+    WHERE id = ?
+      AND project_id = ?
+    `,
+    [taskId, project.id]
+  );
+
+  if (!task) {
+    throw new ApiError(404, "Task not found");
+  }
+
+  return task;
+};
+

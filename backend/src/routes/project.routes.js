@@ -7,6 +7,7 @@ import {
   addProjectMember,
   removeProjectMember,
   transferOwnership,
+  getMyProjects,  
 } from "../controllers/project.controller.js";
 
 const router = express.Router();
@@ -40,6 +41,12 @@ router.post(
   authenticate,
   projectScope,
   transferOwnership
+);
+
+router.get(
+  "/my",
+  authenticate,
+  getMyProjects
 );
 
 export default router;

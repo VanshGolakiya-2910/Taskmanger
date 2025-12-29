@@ -4,6 +4,9 @@ import {
   createTaskService,
   updateTaskStatusService,
   deleteTaskService,
+  getAllProjectTasksService,
+  getMyAssignedTasksService,
+  getTaskByIdService
 } from "../services/task.service.js";
 import {
   validateCreateTask,
@@ -13,13 +16,15 @@ import {
 /* -------------------- CREATE TASK -------------------- */
 
 export const createTask = asyncHandler(async (req, res) => {
-  validateCreateTask(req.body);
-
-  const task = await createTaskService(req.user, req.body);
+  const task = await createTaskService(
+    req.user,     
+    req.project,  
+    req.body      
+  );
 
   res
     .status(201)
-    .json(new ApiResponse(201, task, "Task created"));
+    .json(new ApiResponse(201, task));
 });
 
 /* -------------------- UPDATE TASK STATUS -------------------- */
@@ -46,4 +51,38 @@ export const deleteTask = asyncHandler(async (req, res) => {
   res
     .status(200)
     .json(new ApiResponse(200, null, "Task deleted"));
+});
+
+export const getAllProjectTasks = asyncHandler(async (req, res) => {
+  const tasks = await getAllProjectTasksService(
+    req.user,
+    req.project
+  );
+
+  res.status(200).json(
+    new ApiResponse(200, tasks)
+  );
+});
+
+export const getMyAssignedTasks = asyncHandler(async (req, res) => {
+  const tasks = await getMyAssignedTasksService(
+    req.user,
+    req.project
+  );
+
+  res.status(200).json(
+    new ApiResponse(200, tasks)
+  );
+});
+
+export const getTaskById = asyncHandler(async (req, res) => {
+  const task = await getTaskByIdService(
+    req.user,
+    req.project,
+    req.params.taskId
+  );
+
+  res.status(200).json(
+    new ApiResponse(200, task)
+  );
 });
