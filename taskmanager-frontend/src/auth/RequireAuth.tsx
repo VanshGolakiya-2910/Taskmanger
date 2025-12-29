@@ -1,0 +1,18 @@
+import type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "./useAuth";
+
+type RequireAuthProps = {
+  children: ReactNode;
+};
+
+const RequireAuth = ({ children }: RequireAuthProps) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) return <div className="p-4">Loading...</div>;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  return <>{children}</>;
+};
+
+export default RequireAuth;
