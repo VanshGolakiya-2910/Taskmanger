@@ -6,6 +6,8 @@ import {
   removeProjectMemberService,
   transferProjectOwnershipService,
   getUserProjectsService,
+  getProjectMembersService,
+  
 } from "../services/project.service.js";
 
 /* -------------------- CREATE PROJECT -------------------- */
@@ -67,4 +69,20 @@ export const getMyProjects = asyncHandler(async (req, res) => {
   res
     .status(200)
     .json(new ApiResponse(200, projects, "Projects fetched"));
+});
+
+export const getProjectMembers = asyncHandler(async (req, res) => {
+  const members = await getProjectMembersService(req.project.id);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, members, "Project members fetched"));
+});
+
+export const getProjectDetails = asyncHandler(async (req, res) => {
+  const data = await getProjectDetailsService(req.project.id);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, data, "Project details fetched"));
 });

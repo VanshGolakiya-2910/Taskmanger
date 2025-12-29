@@ -7,10 +7,20 @@ import {
   addProjectMember,
   removeProjectMember,
   transferOwnership,
-  getMyProjects,  
+  getMyProjects,
+  getProjectMembers,
+  getProjectDetails,
 } from "../controllers/project.controller.js";
 
 const router = express.Router();
+
+router.get(
+  "/:projectId/members",
+  authenticate,
+  projectScope,
+  getProjectMembers
+);
+
 
 // Create project (no projectScope yet)
 router.post(
@@ -49,4 +59,17 @@ router.get(
   getMyProjects
 );
 
+router.get(
+  "/:projectId/members",
+  authenticate,
+  projectScope,
+  getProjectMembers
+);
+
+router.get(
+  "/:projectId",
+  authenticate,
+  projectScope,
+  getProjectDetails
+);
 export default router;

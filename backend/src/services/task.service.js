@@ -87,7 +87,7 @@ export const createTaskService = async (user, project, data) => {
         data.title,
         data.description || null,
         data.assignedTo,
-        project.id,     // ✅ authoritative
+        project.id, 
         user.id,
         data.dueDate || null
       ]

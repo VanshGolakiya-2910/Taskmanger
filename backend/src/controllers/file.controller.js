@@ -6,16 +6,16 @@ import {
 } from "../services/file.service.js";
 
 export const uploadFile = asyncHandler(async (req, res) => {
-  const file = await uploadFileService({
+ const result = await uploadFileService({
     user: req.user,
-    projectId: req.body.projectId,
-    taskId: req.body.taskId,
+    projectId: req.project.id, 
+    taskId: req.params.taskId || null,
     file: req.file,
   });
 
   res
     .status(201)
-    .json(new ApiResponse(201, file, "File uploaded"));
+    .json(new ApiResponse(201, result, "Project created"));
 });
 
 export const deleteFile = asyncHandler(async (req, res) => {

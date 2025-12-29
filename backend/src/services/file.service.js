@@ -1,31 +1,44 @@
 import pool from "../config/db.js";
-import { ApiError } from "../utils/ApiError.js";
+import {ApiError} from "../utils/ApiError.js";
 import { emitToProject } from "../realtime/events.js";
-import fs from "fs";
+import fs from "fs/promises";
+
 
 export const uploadFileService = async ({
   user,
   projectId,
-  taskId,
+  taskId = null,
   file,
 }) => {
-  const [[member]] = await pool.query(
-    `SELECT 1 FROM project_members
-     WHERE project_id = ? AND user_id = ?`,
-    [projectId, user.id]
-  );
+  if (!file) {
+    throw new ApiError(400, "File is required");
+  }
 
-  if (!member) {
-    throw new ApiError(403, "Forbidden");
+  // Only verify task belongs to project (if provided)
+  if (taskId) {
+    const [[task]] = await pool.query(
+      `
+      SELECT id
+      FROM tasks
+      WHERE id = ? AND project_id = ?
+      `,
+      [taskId, projectId]
+    );
+
+    if (!task) {
+      throw new ApiError(404, "Task not found");
+    }
   }
 
   const [result] = await pool.query(
-    `INSERT INTO files
-     (project_id, task_id, filename, filepath, uploaded_by)
-     VALUES (?, ?, ?, ?, ?)`,
+    `
+    INSERT INTO files
+      (project_id, task_id, filename, filepath, uploaded_by)
+    VALUES (?, ?, ?, ?, ?)
+    `,
     [
       projectId,
-      taskId || null,
+      taskId,
       file.originalname,
       file.path,
       user.id,
@@ -36,17 +49,31 @@ export const uploadFileService = async ({
     fileId: result.insertId,
     filename: file.originalname,
     taskId,
+    uploadedBy: user.id,
   });
 
   return {
     id: result.insertId,
     filename: file.originalname,
+    taskId,
   };
 };
 
+
+/**
+ * Delete file
+ * Rules:
+ * - File must exist
+ * - User must be project member
+ * - Physical file must be deleted safely
+ */
 export const deleteFileService = async ({ user, fileId }) => {
   const [[file]] = await pool.query(
-    "SELECT * FROM files WHERE id = ?",
+    `
+    SELECT id, filepath, project_id
+    FROM files
+    WHERE id = ?
+    `,
     [fileId]
   );
 
@@ -54,17 +81,21 @@ export const deleteFileService = async ({ user, fileId }) => {
     throw new ApiError(404, "File not found");
   }
 
-  const [[member]] = await pool.query(
-    `SELECT 1 FROM project_members
-     WHERE project_id = ? AND user_id = ?`,
-    [file.project_id, user.id]
+  // Delete DB record first
+  await pool.query(
+    "DELETE FROM files WHERE id = ?",
+    [fileId]
   );
 
-  if (!member) {
-    throw new ApiError(403, "Forbidden");
+  // Delete physical file safely
+  try {
+    await fs.unlink(file.filepath);
+  } catch (err) {
+    // File might already be gone; do not crash
+    console.warn("File deletion warning:", err.message);
   }
 
-  await pool.query("DELETE FROM files WHERE id = ?", [fileId]);
-
-  fs.unlinkSync(file.filepath);
+  emitToProject(file.project_id, "file:deleted", {
+    fileId,
+  });
 };

@@ -161,3 +161,85 @@ export const getUserProjectsService = async (userId) => {
 
   return projects;
 };
+
+export const getProjectMembersService = async (projectId) => {
+  const [members] = await pool.query(
+    `
+    SELECT
+      u.id,
+      u.email,
+      u.role AS global_role,
+      pm.project_role,
+      pm.joined_at
+    FROM project_members pm
+    JOIN users u ON u.id = pm.user_id
+    WHERE pm.project_id = ?
+    ORDER BY pm.joined_at ASC
+    `,
+    [projectId]
+  );
+
+  return members;
+};
+
+export const getProjectDetailsService = async (projectId) => {
+  // 1️⃣ Project info
+  const [[project]] = await pool.query(
+    `
+    SELECT
+      id,
+      name,
+      created_by,
+      created_at
+    FROM projects
+    WHERE id = ?
+    `,
+    [projectId]
+  );
+
+  if (!project) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  const [members] = await pool.query(
+    `
+    SELECT
+      u.id,
+      u.email,
+      u.role AS global_role,
+      pm.project_role,
+      pm.joined_at
+    FROM project_members pm
+    JOIN users u ON u.id = pm.user_id
+    WHERE pm.project_id = ?
+    ORDER BY pm.joined_at ASC
+    `,
+    [projectId]
+  );
+
+  const [tasks] = await pool.query(
+    `
+    SELECT
+      t.id,
+      t.title,
+      t.description,
+      t.status,
+      t.priority,
+      t.due_date,
+      t.created_at,
+      u.id AS assigned_to_id,
+      u.email AS assigned_to_email
+    FROM tasks t
+    JOIN users u ON u.id = t.assigned_to
+    WHERE t.project_id = ?
+    ORDER BY t.created_at DESC
+    `,
+    [projectId]
+  );
+
+  return {
+    project,
+    members,
+    tasks,
+  };
+};
