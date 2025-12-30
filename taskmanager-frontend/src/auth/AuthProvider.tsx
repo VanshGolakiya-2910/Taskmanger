@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "../api/auth.api";
+import { getCurrentUser } from "../api/user.api";
 import { AuthContext } from "./auth.context";
 import { disconnectSocket } from "../sockets/socket";
 import type { User } from "../types/user";

@@ -1,15 +1,36 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import RequireAuth from "../auth/RequireAuth";
+import PublicRoute from "../auth/PublicRoute";
+
 import ProjectsList from "../features/projects/pages/ProjectsList";
 import ProjectLayout from "../features/projects/pages/ProjectLayout";
 import ProjectBoard from "../features/projects/pages/ProjectBoard";
 import TaskDetailPage from "../features/tasks/pages/TaskDetailPage";
 
+import LoginPage from "../auth/pages/LoginPage";
+import SignupPage from "../auth/pages/SignupPage";
+
 const AppRoutes = () => (
   <Routes>
-    <Route path="/login" element={<div>Login</div>} />
+    {/* PUBLIC ROUTES */}
+    <Route
+      path="/login"
+      element={
+        <PublicRoute>
+          <LoginPage />
+        </PublicRoute>
+      }
+    />
+    <Route
+      path="/signup"
+      element={
+        <PublicRoute>
+          <SignupPage />
+        </PublicRoute>
+      }
+    />
 
-    {/* Projects root */}
+    {/* PROTECTED ROUTES */}
     <Route
       path="/projects"
       element={
@@ -19,7 +40,6 @@ const AppRoutes = () => (
       }
     />
 
-    {/* Project-scoped routes */}
     <Route
       path="/projects/:projectId"
       element={
@@ -28,19 +48,13 @@ const AppRoutes = () => (
         </RequireAuth>
       }
     >
+      <Route index element={<Navigate to="board" replace />} />
       <Route path="board" element={<ProjectBoard />} />
+      <Route path="tasks/:taskId" element={<TaskDetailPage />} />
     </Route>
 
+    {/* FALLBACK */}
     <Route path="*" element={<Navigate to="/projects" replace />} />
-
-    <Route
-      path="/projects/:projectId/tasks/:taskId"
-      element={
-        <RequireAuth>
-          <TaskDetailPage />
-        </RequireAuth>
-      }
-    />
   </Routes>
 );
 

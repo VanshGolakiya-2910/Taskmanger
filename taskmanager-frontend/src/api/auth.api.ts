@@ -1,6 +1,5 @@
 // src/api/auth.api.ts
 import { api } from "./axios";
-import type { User } from "../types/user";
 
 export const login = async (payload: {
   email: string;
@@ -19,7 +18,4 @@ export const refreshToken = async () =>
 export const logout = async () =>
   api.post("/auth/logout");
 
-export const getCurrentUser = async (): Promise<User> => {
-  const res = await api.get("/users/me");
-  return res.data.data;
-};
+

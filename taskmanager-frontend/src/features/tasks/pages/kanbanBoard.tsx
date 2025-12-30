@@ -4,7 +4,7 @@ import { KANBAN_COLUMNS } from "../kanban.constants";
 import KanbanColumn from "../components/KanbanColumn";
 import type { Task, TaskStatus } from "../../../types/task";
 import { canMoveTask } from "../kanban.rules";
-import { useAuth } from "../../../auth/useAuth";
+import { useAuth } from "../../../auth/hooks/useAuth";
 
 type Props = {
   tasksByStatus: Record<TaskStatus, Task[]>;

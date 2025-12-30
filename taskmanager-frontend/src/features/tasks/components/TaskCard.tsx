@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { Task } from "../../../types/task";
-import { useAuth } from "../../../auth/useAuth";
+import { useAuth } from "../../../auth/hooks/useAuth";
 import { canMoveTask } from "../kanban.rules";
 
 type Props = {

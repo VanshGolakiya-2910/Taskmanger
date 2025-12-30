@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { connectSocket, joinProjectRoom, leaveProjectRoom } from "./socket";
-import { useAuth } from "../auth/useAuth";
+import { useAuth } from "../auth/hooks/useAuth";
 
 export const useProjectSocket = (projectId: number) => {
   const { isAuthenticated } = useAuth();
