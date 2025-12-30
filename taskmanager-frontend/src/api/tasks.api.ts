@@ -26,9 +26,12 @@ export const getMyTasks = async (projectId: number) =>
 export const getTaskById = async (
   projectId: number,
   taskId: number
-) =>
-  api.get(`/tasks/project/${projectId}/${taskId}`);
-
+): Promise<Task> => {
+  const res = await api.get(
+    `/tasks/project/${projectId}/${taskId}`
+  );
+  return res.data.data;
+};  
 export const updateTaskStatus = async (
   projectId: number,
   taskId: number,
@@ -44,3 +47,5 @@ export const deleteTask = async (
   taskId: number
 ) =>
   api.delete(`/tasks/project/${projectId}/${taskId}`);
+
+  

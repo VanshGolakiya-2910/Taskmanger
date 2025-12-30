@@ -10,7 +10,9 @@ export const addComment = async (
 export const getTaskComments = async (
   projectId: number,
   taskId: number
-) =>
-  api.get(
+): Promise<Comment[]> => {
+  const res = await api.get(
     `/comments/projects/${projectId}/tasks/${taskId}/comments`
   );
+  return res.data.data;
+};

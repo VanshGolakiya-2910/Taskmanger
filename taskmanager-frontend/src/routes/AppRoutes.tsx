@@ -3,6 +3,7 @@ import RequireAuth from "../auth/RequireAuth";
 import ProjectsList from "../features/projects/pages/ProjectsList";
 import ProjectLayout from "../features/projects/pages/ProjectLayout";
 import ProjectBoard from "../features/projects/pages/ProjectBoard";
+import TaskDetailPage from "../features/tasks/pages/TaskDetailPage";
 
 const AppRoutes = () => (
   <Routes>
@@ -31,6 +32,15 @@ const AppRoutes = () => (
     </Route>
 
     <Route path="*" element={<Navigate to="/projects" replace />} />
+
+    <Route
+      path="/projects/:projectId/tasks/:taskId"
+      element={
+        <RequireAuth>
+          <TaskDetailPage />
+        </RequireAuth>
+      }
+    />
   </Routes>
 );
 

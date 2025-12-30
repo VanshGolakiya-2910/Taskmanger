@@ -1,5 +1,6 @@
 // src/api/files.api.ts
 import { api } from "./axios";
+import type { TaskFile } from "../types/file";
 
 export const uploadProjectFile = async (
   projectId: number,
@@ -17,3 +18,10 @@ export const uploadProjectFile = async (
 
 export const deleteFile = async (fileId: number) =>
   api.delete(`/files/${fileId}`);
+
+export const getProjectFiles = async (
+  projectId: number
+): Promise<TaskFile[]> => {
+  const res = await api.get(`/files/projects/${projectId}`);
+  return res.data.data;
+};
