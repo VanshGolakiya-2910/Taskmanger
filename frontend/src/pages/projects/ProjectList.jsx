@@ -1,51 +1,97 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getMyProjectsApi } from '../../api/project.api'
 import PageContainer from '../../components/layout/PageContainer'
+import Card from '../../components/ui/Card'
 
 export default function ProjectList() {
+  const navigate = useNavigate()
+
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    (async () => {
+    let mounted = true
+
+    ;(async () => {
       try {
         const { data } = await getMyProjectsApi()
-        setProjects(data.data)
+        if (mounted) setProjects(data.data || [])
+      } catch {
+        if (mounted) setError('Failed to load projects')
       } finally {
-        setLoading(false)
+        if (mounted) setLoading(false)
       }
     })()
+
+    return () => {
+      mounted = false
+    }
   }, [])
+
+  /* ------------------ States ------------------ */
 
   if (loading) {
     return (
       <PageContainer>
-        <p className="text-slate-500">Loading projects...</p>
+        <p className="text-slate-500">Loading projects…</p>
       </PageContainer>
     )
   }
 
+  if (error) {
+    return (
+      <PageContainer>
+        <p className="text-red-600">{error}</p>
+      </PageContainer>
+    )
+  }
+
+  /* ------------------ Render ------------------ */
+
   return (
     <PageContainer>
-      <h1 className="text-2xl font-semibold mb-6 text-slate-900 dark:text-white">
-        Projects
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">
+          Projects
+        </h1>
+      </div>
 
       {projects.length === 0 ? (
-        <p className="text-slate-500">No projects found.</p>
+        <Card className="p-8 text-center">
+          <p className="text-slate-500">
+            No projects found.
+          </p>
+        </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <div
+            <Card
               key={project.id}
-              className="bg-white dark:bg-slate-800 
-                         border border-slate-200 dark:border-slate-700
-                         rounded-xl p-6 shadow-sm"
+              role="button"
+              tabIndex={0}
+              onClick={() => navigate(`/projects/${project.id}`)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  navigate(`/projects/${project.id}`)
+                }
+              }}
+              className="
+                p-6
+                cursor-pointer
+                focus:outline-none
+                focus:ring-2 focus:ring-slate-900/10
+              "
             >
               <h2 className="text-lg font-medium text-slate-900 dark:text-white">
                 {project.name}
               </h2>
-            </div>
+
+              <p className="mt-1 text-sm text-slate-500">
+                Project ID: {project.id}
+              </p>
+            </Card>
           ))}
         </div>
       )}

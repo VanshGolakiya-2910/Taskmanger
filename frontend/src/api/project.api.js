@@ -11,3 +11,12 @@ export const createProjectApi = (payload) =>
 
 export const getProjectMembersApi = (projectId) =>
   api.get(`/projects/${projectId}/members`)
+
+export const addProjectMemberApi = (projectId, payload) =>
+  api.post(`/projects/${projectId}/members`, payload)
+
+export const removeProjectMemberApi = (projectId, userId) =>
+  api.delete(`/projects/${projectId}/members/${userId}`)
+
+export const transferProjectOwnershipApi = (projectId, payload) =>
+  api.post(`/projects/${projectId}/transfer`, payload)

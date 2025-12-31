@@ -4,6 +4,8 @@ import PageContainer from "../components/layout/PageContainer";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "../pages/auth/Login";
 import ProjectList from "../pages/projects/ProjectList";
+import ProjectDetails from "../pages/projects/ProjectDetails";
+
 const Dashboard = () => (
   <PageContainer>
     <h1 className="text-2xl font-semibold">Dashboard</h1>
@@ -32,6 +34,16 @@ export default function AppRoutes() {
           <ProtectedRoute>
             <AppLayout>
               <ProjectList />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/projects/:projectId"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ProjectDetails />
             </AppLayout>
           </ProtectedRoute>
         }
