@@ -1,24 +1,33 @@
 <div align="center">
-	<h1>Task Manager</h1>
-	<p>Full‑stack task management with projects, roles, comments, files, real‑time updates, and Redis caching.</p>
+  <h1>Task Manager</h1>
+  <p>Full-stack task management with projects, real-time chat, roles, comments, files, and Redis caching.</p>
 </div>
 
 ## Overview
 
-- Backend: Node.js/Express, MySQL, JWT auth with refresh tokens, role-based access, Socket.IO events, Redis cache, rate limiting, file uploads (multer), migrations auto-run on boot.
-- Frontend: React + Vite, Axios API client, Auth and Chat providers, Tailwind pipeline.
+Production-ready collaboration platform with secure auth, caching, and real-time chat.
+
+- **Backend**: Node.js/Express, MySQL, JWT (access + refresh), Socket.IO, Redis cache, rate limiting, multer uploads, migrations auto-run on boot.
+- **Frontend**: React + Vite, Tailwind CSS, Axios, Context API (Auth, Chat, Toast), WebSocket integration.
 
 ## Features
 
-- Projects and membership roles (manager, project_manager, member)
-- Tasks with history, status transitions, assignments, and per-project listings
-- Comments on tasks with realtime events
-- File uploads scoped to projects/tasks
-- JWT auth (access + refresh) with cookie support
-- Redis caching for hot reads (`X-Cache: HIT|MISS` headers)
-- Rate limiting on auth endpoints (configurable/disableable)
-- CORS allowlist and secure cookie settings
-- Health checks (`/` and `/health/redis`)
+### Core Management
+- Projects and membership roles (`manager`, `project_manager`, `member`)
+- Tasks with history, status transitions, assignments, priorities
+- Comments on tasks with realtime updates
+- File attachments scoped to projects/tasks
+
+### Real-Time Collaboration
+- Project chat rooms (per-project private channels)
+- Instant messaging, typing indicators, user presence, auto-join/leave rooms
+- Floating/minimizable chat UI
+
+### Performance & Security
+- Redis caching for hot reads (`X-Cache: HIT|MISS`)
+- JWT with refresh rotation and HTTP-only cookies
+- Configurable auth rate limiting
+- CORS allowlist, Helmet security headers
 
 ## Prerequisites
 
@@ -30,63 +39,74 @@
 
 ```bash
 git clone https://github.com/VanshGolakiya-2910/Taskmanger.git
+
+# Backend
 cd Taskmanger/backend
 npm install
-cp .env.sample .env   # fill secrets and DB creds
+cp .env.sample .env   # fill DB creds and secrets
 npm run dev           # runs migrations, starts API
 
-# in another terminal
+# Frontend (new terminal)
 cd ../frontend
 npm install
-cp .env.sample .env
+cp .env.sample .env   # set VITE_API_URL
 npm run dev           # opens http://localhost:5173
 ```
 
-## Environment configuration
+## Environment
 
-- Backend sample: [backend/.env.sample](backend/.env.sample)
-- Frontend sample: [frontend/.env.sample](frontend/.env.sample)
+- Backend template: [backend/.env.sample](backend/.env.sample)
+- Frontend template: [frontend/.env.sample](frontend/.env.sample)
 
-Key backend variables:
+### Backend keys
 - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
 - `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` (32+ chars)
-- `ALLOWED_ORIGINS` (comma-separated)
+- `JWT_ACCESS_EXPIRES`, `JWT_REFRESH_EXPIRES` (optional)
 - `REDIS_URL`
+- `ALLOWED_ORIGINS` (comma-separated)
 - `AUTH_RATE_LIMIT_MAX`, `AUTH_RATE_LIMIT_DISABLE`
 - `PORT`, `NODE_ENV`
+- `UPLOAD_DIR`
 
-Key frontend variable:
+### Frontend keys
 - `VITE_API_URL` (e.g., http://localhost:5000/api/v1)
+- `VITE_SOCKET_URL` (optional, defaults to API origin if omitted)
 
-## Caching
+## Caching strategy
 
 - Cached: user profile, user lists, project list, project members/details, task lists, task-by-id, task comments.
-- Invalidation on writes: task create/update/delete/status change, comment create, project membership changes, user changes.
-- Inspect with `X-Cache` header or `redis-cli monitor`.
+- Invalidation: on task create/update/delete/status change, comment create, project membership changes, user changes.
+- Inspect: `X-Cache` header or `redis-cli monitor`.
 
-## Health and observability
+## Real-time architecture
+
+- Socket.IO with authenticated handshake.
+- Rooms: `project:{id}` auto-join/leave.
+- Events: `chat:message`, `chat:typing`, plus project/task events for UI updates.
+
+## Health & observability
 
 - Liveness: `/`
 - Redis: `/health/redis`
-- Cache visibility: `X-Cache: HIT|MISS` on cached endpoints
+- Cache visibility: `X-Cache: HIT|MISS`
 
 ## Scripts
 
-- Backend: `npm run dev` (nodemon), `npm start` (prod)
+- Backend: `npm run dev`, `npm start`
 - Frontend: `npm run dev`, `npm run build`
 
 ## Operational notes
 
-- Rate limiting: disabled in development; enable/tune via env for production.
-- CORS: set `ALLOWED_ORIGINS` to your deployed frontend domains.
+- Rate limiting: disabled in development by env; tune for production.
+- CORS: set `ALLOWED_ORIGINS` to deployed frontend domains.
 - Cookies: `httpOnly`, `sameSite=lax`, `secure` in production.
 - Migrations: auto-run on server start.
-- File uploads: stored under `uploads/`; ensure writable volume in production.
+- Uploads: stored under `uploads/`; mount/persist in production.
 
 ## Troubleshooting
 
-- Redis connection refused: start Redis or point `REDIS_URL` to a reachable host.
-- 429 on auth: increase `AUTH_RATE_LIMIT_MAX` or set `AUTH_RATE_LIMIT_DISABLE=true` in dev.
+- Redis connection refused: start Redis or update `REDIS_URL`.
+- 429 on auth: raise `AUTH_RATE_LIMIT_MAX` or set `AUTH_RATE_LIMIT_DISABLE=true` in dev.
 - CORS blocked: configure `ALLOWED_ORIGINS`.
 
 ## License
