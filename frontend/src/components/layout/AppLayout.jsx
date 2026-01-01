@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
+import ChatPanel from '../chat/ChatPanel'
 
 export default function AppLayout({ children }) {
   const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'))
@@ -24,6 +25,7 @@ export default function AppLayout({ children }) {
         <Navbar onToggleTheme={toggleTheme} isDark={dark} />
         {children}
       </div>
+      <ChatPanel />
     </div>
   )
 }

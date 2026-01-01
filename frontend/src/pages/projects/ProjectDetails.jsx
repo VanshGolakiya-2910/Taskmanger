@@ -15,6 +15,7 @@ import Modal from '../../components/ui/Modal'
 import Badge from '../../components/ui/Badge'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
+import { useChat } from '../../hooks/useChat'
 import AddMemberModal from './components/AddMemberModal'
 import FileUpload from './components/FileUpload'
 
@@ -97,6 +98,7 @@ export default function ProjectDetails() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { showToast } = useToast()
+  const { switchProject } = useChat()
 
   const [project, setProject] = useState(null)
   const [members, setMembers] = useState([])
@@ -128,6 +130,8 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     loadDetails()
+    // Switch to this project's chat room
+    switchProject(projectId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId])
 
