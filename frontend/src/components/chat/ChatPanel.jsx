@@ -4,9 +4,13 @@ import { useChat } from '../../hooks/useChat'
 import ChatWindow from './ChatWindow'
 import Button from '../ui/Button'
 
-export default function ChatPanel() {
-  const { activeProjectId, switchProject } = useChat()
-  const [isOpen, setIsOpen] = useState(false)
+export default function ChatPanel({ isOpenProp = null, onCloseProp = null }) {
+  const { activeProjectId } = useChat()
+  const [isOpenState, setIsOpenState] = useState(false)
+  
+  // Use prop if provided (for inline usage), otherwise use internal state (for floating button)
+  const isOpen = isOpenProp !== null ? isOpenProp : isOpenState
+  const setIsOpen = onCloseProp !== null ? onCloseProp : setIsOpenState
 
   if (!activeProjectId) {
     return null
@@ -26,7 +30,7 @@ export default function ChatPanel() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-[600px] rounded-lg shadow-2xl overflow-hidden bg-white dark:bg-slate-900 z-50">
+        <div className="fixed bottom-6 right-6 w-96 h-150 rounded-lg shadow-2xl overflow-hidden bg-white dark:bg-slate-900 z-50">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800 bg-blue-500 text-white">
             <h3 className="font-semibold">Project Chat</h3>

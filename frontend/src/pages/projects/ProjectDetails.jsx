@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Folder, ListTodo, Plus, UserPlus, Users, Trash, Kanban, ArrowUpRight } from 'lucide-react'
+import { Folder, ListTodo, Plus, UserPlus, Users, Trash, Kanban, ArrowUpRight, MessageCircle } from 'lucide-react'
 
 import {
   getProjectDetailsApi,
@@ -16,6 +16,7 @@ import Badge from '../../components/ui/Badge'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import { useChat } from '../../hooks/useChat'
+import ChatPanel from '../../components/chat/ChatPanel'
 import AddMemberModal from './components/AddMemberModal'
 import FileUpload from './components/FileUpload'
 
@@ -105,6 +106,7 @@ export default function ProjectDetails() {
   const [tasks, setTasks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [chatOpen, setChatOpen] = useState(false)
 
   const [openAdd, setOpenAdd] = useState(false)
   const [removeTarget, setRemoveTarget] = useState(null)
@@ -181,6 +183,15 @@ export default function ProjectDetails() {
           </div>
 
           <div className="flex gap-3 flex-wrap">
+            <Button
+              variant="secondary"
+              className="gap-2"
+              onClick={() => setChatOpen(!chatOpen)}
+            >
+              <MessageCircle className="w-4 h-4" />
+              Chat
+            </Button>
+
             <Button
               variant="secondary"
               className="gap-2"
@@ -301,6 +312,8 @@ export default function ProjectDetails() {
           </Button>
         </div>
       </Modal>
+
+      <ChatPanel isOpenProp={chatOpen} onCloseProp={setChatOpen} />
     </PageContainer>
   )
 }
