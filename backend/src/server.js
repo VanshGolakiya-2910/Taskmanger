@@ -4,11 +4,12 @@ import { runMigrations } from "./config/runMigrations.js";
 import "./config/validateEnv.js";
 import http from "http";
 import { initSocketServer } from "./realtime/socket.server.js";
+import { initRedis } from "./config/redis.js";
 
 const server = http.createServer(app);
 
 (async () => {
-  await runMigrations();
+  await Promise.all([runMigrations(), initRedis()]);
 })();
 
 export const io = initSocketServer(server);

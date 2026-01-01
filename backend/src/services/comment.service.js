@@ -31,6 +31,7 @@ export const createCommentService = async ({ user, taskId, content }) => {
       taskId,
       userId: user.id,
       content,
+      projectId: task.project_id,
     };
 
     await connection.commit();

@@ -47,6 +47,8 @@ export const updateTaskStatusService = async (user, taskId, newStatus) => {
       oldStatus: task.status,
       newStatus,
     });
+
+    return task.project_id;
   } catch (err) {
     await conn.rollback();
     throw err;
@@ -61,7 +63,18 @@ export const deleteTaskService = async (user, taskId) => {
     throw new Error("FORBIDDEN");
   }
 
+  const [[task]] = await pool.query(
+    "SELECT project_id FROM tasks WHERE id = ?",
+    [taskId]
+  );
+
+  if (!task) {
+    throw new ApiError(404, "Task not found");
+  }
+
   await pool.query("DELETE FROM tasks WHERE id = ?", [taskId]);
+
+  return task.project_id;
 };
 
 export const createTaskService = async (user, project, data) => {

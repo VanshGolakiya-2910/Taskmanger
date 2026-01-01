@@ -15,6 +15,7 @@ import userRoutes from "./routes/user.routes.js";
 
 //middlewares
 import { errorHandler } from "./middlewares/error.middleware.js";
+import { pingRedis } from "./config/redis.js";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -43,10 +44,15 @@ const corsOptions = {
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 20,
+  max: process.env.AUTH_RATE_LIMIT_MAX
+    ? Number(process.env.AUTH_RATE_LIMIT_MAX)
+    : 20,
   message: "Too many auth attempts. Please try again later.",
   standardHeaders: "draft-7",
   legacyHeaders: false,
+  skip: () =>
+    process.env.NODE_ENV !== "production" ||
+    String(process.env.AUTH_RATE_LIMIT_DISABLE).toLowerCase() === "true",
 });
 
 const globalLimiter = rateLimit({
@@ -94,6 +100,16 @@ app.use("/api/v1/users", userRoutes);
 // Health check
 app.get("/", (req, res) => {
   res.status(200).json({ message: "API is running" });
+});
+
+// Redis health
+app.get("/health/redis", async (req, res) => {
+  try {
+    const pong = await pingRedis();
+    res.status(200).json({ status: "ok", pong });
+  } catch (err) {
+    res.status(503).json({ status: "error", message: err.message });
+  }
 });
 
 /* -------------------- 404 HANDLER -------------------- */
