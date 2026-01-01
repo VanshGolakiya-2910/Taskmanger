@@ -73,27 +73,27 @@ export default function ChatWindow() {
 
   if (!isConnected) {
     return (
-      <div className="flex items-center justify-center h-full bg-slate-50 dark:bg-slate-900">
+      <div style={{ backgroundColor: 'var(--bg-primary)' }} className="flex items-center justify-center h-full">
         <div className="text-center">
           <Loader className="w-8 h-8 animate-spin text-slate-400 mx-auto mb-3" />
-          <p className="text-slate-600 dark:text-slate-300">Connecting...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Connecting...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-slate-900">
+    <div style={{ backgroundColor: 'var(--bg-secondary)' }} className="flex flex-col h-full">
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-slate-500 dark:text-slate-400">
+          <div style={{ color: 'var(--text-secondary)' }} className="flex items-center justify-center h-full">
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-3">
+              <div style={{ backgroundColor: 'var(--bg-tertiary)' }} className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Send className="w-8 h-8 text-slate-400" />
               </div>
-              <p className="font-medium">No messages yet</p>
-              <p className="text-sm mt-1">Start a conversation!</p>
+              <p style={{ color: 'var(--text-primary)' }} className="font-medium">No messages yet</p>
+              <p style={{ color: 'var(--text-secondary)' }} className="text-sm mt-1">Start a conversation!</p>
             </div>
           </div>
         ) : (
@@ -104,20 +104,22 @@ export default function ChatWindow() {
                 {!isOwnMessage && <Avatar name={msg.userName} />}
                 <div className={`flex flex-col ${isOwnMessage ? 'items-end' : 'items-start'} max-w-xs lg:max-w-md`}>
                   {!isOwnMessage && (
-                    <span className="text-xs font-medium text-slate-600 dark:text-slate-400 mb-1 px-1">
+                    <span style={{ color: 'var(--text-secondary)' }} className="text-xs font-medium mb-1 px-1">
                       {msg.userName}
                     </span>
                   )}
                   <div
+                    style={{
+                      backgroundColor: isOwnMessage ? 'var(--message-self-bg)' : 'var(--message-other-bg)',
+                      color: isOwnMessage ? 'var(--message-self-text)' : 'var(--message-other-text)',
+                    }}
                     className={`px-4 py-2 rounded-2xl ${
-                      isOwnMessage
-                        ? 'bg-blue-500 text-white rounded-tr-md'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-tl-md'
+                      isOwnMessage ? 'rounded-tr-md' : 'rounded-tl-md'
                     }`}
                   >
                     <p className="text-sm break-words">{msg.content}</p>
                   </div>
-                  <span className={`text-xs text-slate-500 dark:text-slate-400 mt-1 px-1`}>
+                  <span style={{ color: 'var(--text-secondary)' }} className="text-xs mt-1 px-1">
                     {new Date(msg.timestamp).toLocaleTimeString([], {
                       hour: '2-digit',
                       minute: '2-digit',

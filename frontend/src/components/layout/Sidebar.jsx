@@ -9,7 +9,7 @@ const linkClass = ({ isActive }) =>
   `${baseItemClass} ${
     isActive
       ? 'bg-slate-900 text-white shadow-sm'
-      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+      : 'hover:opacity-80'
   }`
 
 export default function Sidebar() {
@@ -18,32 +18,64 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="hidden md:block w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700"
+      style={{
+        backgroundColor: 'var(--bg-secondary)',
+        borderRightColor: 'var(--border-color)',
+      }}
+      className="hidden md:block w-64 border-r"
     >
       <div className="p-4">
-        <p className="text-sm font-semibold uppercase tracking-[0.08em] text-slate-600 dark:text-slate-300 mb-3">
+        <p style={{ color: 'var(--text-secondary)' }} className="text-sm font-semibold uppercase tracking-[0.08em] mb-3">
           Menu
         </p>
         <nav className="space-y-2">
-          <NavLink to="/dashboard" className={linkClass}>
+          <NavLink 
+            to="/dashboard" 
+            className={linkClass}
+            style={({ isActive }) => ({
+              backgroundColor: isActive ? 'var(--bg-primary)' : 'transparent',
+              color: isActive ? '#ffffff' : 'var(--text-primary)',
+            })}
+          >
             <LayoutDashboard className="w-5 h-5" />
             Dashboard
           </NavLink>
 
-          <NavLink to="/projects" className={linkClass}>
+          <NavLink 
+            to="/projects" 
+            className={linkClass}
+            style={({ isActive }) => ({
+              backgroundColor: isActive ? 'var(--bg-primary)' : 'transparent',
+              color: isActive ? '#ffffff' : 'var(--text-primary)',
+            })}
+          >
             <Folder className="w-5 h-5" />
             Projects
           </NavLink>
 
-          <NavLink to="/tasks/new" className={linkClass}>
+          <NavLink 
+            to="/tasks/new" 
+            className={linkClass}
+            style={({ isActive }) => ({
+              backgroundColor: isActive ? 'var(--bg-primary)' : 'transparent',
+              color: isActive ? '#ffffff' : 'var(--text-primary)',
+            })}
+          >
             <Plus className="w-5 h-5" />
             Create Task
           </NavLink>
 
-          <div className="border-t border-slate-200 dark:border-slate-700 my-2"></div>
+          <div style={{ borderColor: 'var(--border-color)' }} className="border-t my-2"></div>
 
           {isManager && (
-            <NavLink to="/users" className={linkClass}>
+            <NavLink 
+              to="/users" 
+              className={linkClass}
+              style={({ isActive }) => ({
+                backgroundColor: isActive ? 'var(--bg-primary)' : 'transparent',
+                color: isActive ? '#ffffff' : 'var(--text-primary)',
+              })}
+            >
               <Users className="w-5 h-5" />
               Manage Users
             </NavLink>

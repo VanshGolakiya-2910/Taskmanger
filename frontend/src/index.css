@@ -1,5 +1,130 @@
 @import "tailwindcss";
 
-html {
-  font-family: 'Inter', system-ui, sans-serif;
+@layer base {
+  /* Light mode variables (default) */
+  :root {
+    /* Backgrounds */
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f1f5f9;
+    --bg-quaternary: #e2e8f0;
+    --bg-hover: rgba(241, 245, 249, 0.7);
+    --bg-overlay: rgba(255, 255, 255, 0.9);
+    
+    /* Text colors */
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --text-tertiary: #94a3b8;
+    --text-inverse: #f1f5f9;
+    
+    /* Borders */
+    --border-color: #e2e8f0;
+    --border-light: #f1f5f9;
+    
+    /* Header/Nav */
+    --header-bg: rgba(255, 255, 255, 0.9);
+    --header-border: #e2e8f0;
+    
+    /* UI Elements */
+    --input-bg: #ffffff;
+    --input-border: #e2e8f0;
+    --button-hover: #f1f5f9;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    
+    /* Chat/Messages */
+    --message-self-bg: #3b82f6;
+    --message-other-bg: #f1f5f9;
+    --message-self-text: #ffffff;
+    --message-other-text: #0f172a;
+    
+    /* Toast/Notifications */
+    --toast-bg: #ffffff;
+    --toast-border: #e2e8f0;
+    --toast-text: #0f172a;
+  }
+
+  /* Dark mode variables */
+  html.dark {
+    /* Backgrounds */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #1e293b;
+    --bg-quaternary: #334155;
+    --bg-hover: rgba(30, 41, 59, 0.7);
+    --bg-overlay: rgba(15, 23, 42, 0.8);
+    
+    /* Text colors */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --text-inverse: #0f172a;
+    
+    /* Borders */
+    --border-color: #334155;
+    --border-light: #475569;
+    
+    /* Header/Nav */
+    --header-bg: rgba(15, 23, 42, 0.8);
+    --header-border: #334155;
+    
+    /* UI Elements */
+    --input-bg: #1e293b;
+    --input-border: #334155;
+    --button-hover: #334155;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    
+    /* Chat/Messages */
+    --message-self-bg: #3b82f6;
+    --message-other-bg: #334155;
+    --message-self-text: #ffffff;
+    --message-other-text: #f1f5f9;
+    
+    /* Toast/Notifications */
+    --toast-bg: #1e293b;
+    --toast-border: #334155;
+    --toast-text: #f1f5f9;
+    
+    color-scheme: dark;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    color-scheme: light;
+  }
+
+  /* Global color utilities to replace Tailwind dark: variants */
+  .text-slate-900 {
+    color: var(--text-primary) !important;
+  }
+
+  .text-slate-500 {
+    color: var(--text-secondary) !important;
+  }
+
+  .text-slate-600 {
+    color: var(--text-secondary) !important;
+  }
+
+  .bg-slate-50 {
+    background-color: var(--bg-primary) !important;
+  }
+
+  .bg-slate-100 {
+    background-color: var(--bg-tertiary) !important;
+  }
+
+  .border-slate-200 {
+    border-color: var(--border-color) !important;
+  }
+
+  .hover\:bg-slate-50:hover {
+    background-color: var(--bg-primary) !important;
+  }
+
+  .hover\:bg-slate-100:hover {
+    background-color: var(--bg-hover) !important;
+  }
 }
+

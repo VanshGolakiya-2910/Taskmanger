@@ -1,9 +1,12 @@
 export default function Card({ children, className = '', ...props }) {
   return (
     <div
+      style={{
+        backgroundColor: 'var(--card-bg)',
+        borderColor: 'var(--card-border)',
+      }}
       className={`
-        bg-white dark:bg-slate-800
-        border border-slate-200 dark:border-slate-700
+        border
         rounded-xl
         shadow-sm hover:shadow-md
         transition-shadow

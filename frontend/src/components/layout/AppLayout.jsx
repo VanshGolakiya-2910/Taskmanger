@@ -1,28 +1,19 @@
-import { useState, useEffect } from 'react'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 import ChatPanel from '../chat/ChatPanel'
+import { useTheme } from '../../context/ThemeContext'
 
 export default function AppLayout({ children }) {
-  const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'))
-
-  useEffect(() => {
-    if (dark) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [dark])
-
-  const toggleTheme = () => {
-    setDark((prev) => !prev)
-  }
+  const { isDark } = useTheme()
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div style={{
+      backgroundColor: 'var(--bg-primary)',
+      color: 'var(--text-primary)',
+    }} className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col min-h-screen">
-        <Navbar onToggleTheme={toggleTheme} isDark={dark} />
+        <Navbar />
         {children}
       </div>
       <ChatPanel />

@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { Moon, Sun } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
+import { useTheme } from '../../context/ThemeContext'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 
 export default function Login() {
   const { login } = useAuth()
+  const { isDark, toggleTheme } = useTheme()
   const navigate = useNavigate()
 
   const [form, setForm] = useState({ email: '', password: '' })
@@ -28,7 +31,24 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center px-4 py-12">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center px-4 py-12 relative">
+      {/* Theme toggle button */}
+      <button
+        onClick={() => {
+          console.log('Theme button clicked')
+          toggleTheme()
+        }}
+        className="absolute top-6 right-6 p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition cursor-pointer"
+        aria-label="Toggle theme"
+        title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {isDark ? (
+          <Sun className="w-5 h-5 text-slate-300" />
+        ) : (
+          <Moon className="w-5 h-5 text-slate-600" />
+        )}
+      </button>
+
       <div className="max-w-5xl w-full mx-auto grid gap-10 lg:grid-cols-2 items-center">
         <div className="space-y-5">
           <span className="inline-flex items-center gap-2 rounded-full bg-emerald-100 text-emerald-800 px-3 py-1 text-xs font-semibold dark:bg-emerald-900/40 dark:text-emerald-100">

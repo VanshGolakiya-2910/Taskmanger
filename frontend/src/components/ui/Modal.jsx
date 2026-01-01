@@ -8,12 +8,13 @@ export default function Modal({ open, onClose, children }) {
         onClick={onClose}
       />
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="
-          bg-white dark:bg-slate-800
-          rounded-xl shadow-xl
-          border border-slate-200 dark:border-slate-700
-          max-w-lg w-full p-6
-        ">
+        <div 
+          style={{
+            backgroundColor: 'var(--card-bg)',
+            borderColor: 'var(--card-border)',
+          }}
+          className="rounded-xl shadow-xl border max-w-lg w-full p-6"
+        >
           {children}
         </div>
       </div>

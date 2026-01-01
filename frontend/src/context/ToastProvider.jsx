@@ -18,10 +18,14 @@ export function ToastProvider({ children }) {
 
       {toast && (
         <div
+          style={{
+            backgroundColor: 'var(--toast-bg)',
+            borderColor: 'var(--toast-border)',
+            color: 'var(--toast-text)',
+          }}
           className="
             fixed bottom-6 right-6 z-50
-            bg-white dark:bg-slate-800
-            border border-slate-200 dark:border-slate-700
+            border
             rounded-lg shadow-lg
             px-4 py-3
             text-sm

@@ -4,7 +4,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
+    tailwindcss({
+      config: {
+        darkMode: 'selector',
+      }
+    }),
     react(),
-    tailwindcss(),
   ],
 })

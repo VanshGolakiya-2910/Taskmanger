@@ -5,18 +5,44 @@ export default function Button({
   ...props
 }) {
   const variants = {
-    primary:
-      'bg-slate-900 hover:bg-slate-800 text-white',
-    secondary:
-      'bg-white hover:bg-slate-50 text-slate-900 border border-slate-300',
-    danger:
-      'bg-red-600 hover:bg-red-700 text-white',
-    ghost:
-      'hover:bg-slate-100 text-slate-700 dark:text-slate-300',
+    primary: {
+      bg: '#0f172a',
+      hover: '#1e293b',
+      text: '#ffffff',
+    },
+    secondary: {
+      bg: 'var(--bg-secondary)',
+      hover: 'var(--bg-tertiary)',
+      text: 'var(--text-primary)',
+      border: 'var(--border-color)',
+    },
+    danger: {
+      bg: '#dc2626',
+      hover: '#b91c1c',
+      text: '#ffffff',
+    },
+    ghost: {
+      bg: 'transparent',
+      hover: 'var(--bg-tertiary)',
+      text: 'var(--text-primary)',
+    },
   }
+
+  const variantStyle = variants[variant]
 
   return (
     <button
+      style={{
+        backgroundColor: variantStyle.bg,
+        color: variantStyle.text,
+        borderColor: variantStyle.border,
+      }}
+      onMouseEnter={(e) => {
+        e.target.style.backgroundColor = variantStyle.hover
+      }}
+      onMouseLeave={(e) => {
+        e.target.style.backgroundColor = variantStyle.bg
+      }}
       className={`
         inline-flex items-center justify-center
         px-6 py-2.5
@@ -24,7 +50,7 @@ export default function Button({
         text-sm font-medium
         transition-colors
         disabled:opacity-50 disabled:cursor-not-allowed
-        ${variants[variant]}
+        ${variant === 'secondary' ? 'border' : ''}
         ${className}
       `}
       {...props}

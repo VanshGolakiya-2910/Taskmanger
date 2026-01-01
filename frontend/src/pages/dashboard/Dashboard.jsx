@@ -22,8 +22,8 @@ function StatCard({ title, value, icon: IconComponent, accent }) {
         <IconComponent className="w-5 h-5 text-white" />
       </div>
       <div>
-        <p className="text-sm text-slate-500">{title}</p>
-        <p className="text-2xl font-semibold text-slate-900 dark:text-white">
+        <p style={{ color: 'var(--text-secondary)' }} className="text-sm">{title}</p>
+        <p style={{ color: 'var(--text-primary)' }} className="text-2xl font-semibold">
           {value}
         </p>
       </div>
