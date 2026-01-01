@@ -7,7 +7,13 @@ export const initSocket = (token) => {
     return socket
   }
 
-  socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000', {
+  const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000'
+  console.log('🔌 Initializing Socket.io connection...')
+  console.log('📍 Socket URL:', socketUrl)
+  console.log('🔑 Token present:', !!token)
+  console.log('🔑 Token preview:', token ? token.substring(0, 20) + '...' : 'No token')
+
+  socket = io(socketUrl, {
     auth: {
       token: token,
     },
@@ -18,15 +24,20 @@ export const initSocket = (token) => {
   })
 
   socket.on('connect', () => {
-    console.log('Socket connected:', socket.id)
+    console.log('✅ Socket connected:', socket.id)
   })
 
   socket.on('disconnect', () => {
-    console.log('Socket disconnected')
+    console.log('❌ Socket disconnected')
+  })
+
+  socket.on('connect_error', (error) => {
+    console.error('🔴 Socket connection error:', error.message)
+    console.error('🔴 Full error:', error)
   })
 
   socket.on('error', (error) => {
-    console.error('Socket error:', error)
+    console.error('🔴 Socket error:', error)
   })
 
   return socket
