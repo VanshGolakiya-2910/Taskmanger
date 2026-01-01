@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import morgan from "morgan";
+import rateLimit from "express-rate-limit";
 // Routes
 import authRoutes from "./routes/auth.routes.js";
 import projectRoutes from "./routes/project.routes.js";
@@ -15,27 +17,74 @@ import userRoutes from "./routes/user.routes.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
+app.set("trust proxy", 1);
+
+/* -------------------- CONFIG -------------------- */
+const devOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+];
+
+const allowlist = (process.env.ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const effectiveAllowlist = allowlist.length ? allowlist : devOrigins;
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // Allow same-origin/non-browser tools
+    if (effectiveAllowlist.includes(origin)) return callback(null, true);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+};
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: "Too many auth attempts. Please try again later.",
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+});
+
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  message: "Too many requests. Please try again later.",
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+});
 
 /* -------------------- GLOBAL MIDDLEWARES -------------------- */
 
-// Enable CORS (configure origins later for production)
+// Enable CORS with allowlist and credentials
+app.use(cors(corsOptions));
+
+// Global rate limiting (per IP)
+app.use(globalLimiter);
+
+// Security headers
 app.use(
-  cors({
-    origin: true,
-    credentials: true,
+  helmet({
+    contentSecurityPolicy: false, // can be tightened when front-end domain is final
   })
 );
 
-app.use(morgan("dev"));
+if (process.env.NODE_ENV !== "production") {
+  app.use(morgan("dev"));
+}
 // Parse JSON request bodies
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
   
 // Parse cookies (for refresh token)
 app.use(cookieParser());
 
 /* -------------------- ROUTES -------------------- */
 
-app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/auth", authLimiter, authRoutes);
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/tasks", taskRoutes);
 app.use("/api/v1/comments", commentRoutes);
@@ -51,16 +100,6 @@ app.get("/", (req, res) => {
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
-});
-
-/* -------------------- ERROR HANDLER (BASE) -------------------- */
-// This will be enhanced later with ApiError
-
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({
-    message: "Internal server error",
-  });
 });
 
 app.use(errorHandler);

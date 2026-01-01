@@ -1,6 +1,7 @@
 import "./services/preload.service.js"
 import app from "./app.js";
 import { runMigrations } from "./config/runMigrations.js";
+import "./config/validateEnv.js";
 import http from "http";
 import { initSocketServer } from "./realtime/socket.server.js";
 

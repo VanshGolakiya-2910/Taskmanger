@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  withCredentials: true, 
+  withCredentials: true, // required for refresh cookies; keep backend CORS allowlist in sync
 })
 
 let accessToken = null

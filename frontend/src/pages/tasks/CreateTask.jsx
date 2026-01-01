@@ -3,73 +3,16 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import PageContainer from '../../components/layout/PageContainer'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
+import Input from '../../components/ui/Input'
+import Select from '../../components/ui/Select'
+import TextArea from '../../components/ui/TextArea'
+import FormField from '../../components/ui/FormField'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import { getMyProjectsApi, getProjectMembersApi } from '../../api/project.api'
 import { createTaskApi } from '../../api/task.api'
 import { TASK_STATUSES } from '../../utils/constant'
 import { canCreateTask } from '../../utils/permissions'
-
-function FormField({ label, hint, children }) {
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <label className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-          {label}
-        </label>
-        {hint && <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>{hint}</span>}
-      </div>
-      {children}
-    </div>
-  )
-}
-
-const inputBase =
-  'w-full rounded-lg border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-900/60'
-
-function TextInput(props) {
-  return (
-    <input
-      style={{
-        backgroundColor: 'var(--input-bg)',
-        borderColor: 'var(--input-border)',
-        color: 'var(--text-primary)',
-      }}
-      className={inputBase}
-      {...props}
-    />
-  )
-}
-
-function TextArea(props) {
-  return (
-    <textarea
-      style={{
-        backgroundColor: 'var(--input-bg)',
-        borderColor: 'var(--input-border)',
-        color: 'var(--text-primary)',
-      }}
-      className={`${inputBase} min-h-30 resize-vertical`}
-      {...props}
-    />
-  )
-}
-
-function SelectInput({ children, ...props }) {
-  return (
-    <select
-      style={{
-        backgroundColor: 'var(--input-bg)',
-        borderColor: 'var(--input-border)',
-        color: 'var(--text-primary)',
-      }}
-      className={`${inputBase} h-11`}
-      {...props}
-    >
-      {children}
-    </select>
-  )
-}
 
 export default function CreateTask() {
   const navigate = useNavigate()
@@ -239,11 +182,12 @@ export default function CreateTask() {
           <Card className="lg:col-span-2 p-6">
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField label="Project" hint="Only projects you belong to">
-                  <SelectInput
+                <FormField label="Project" hint="Only projects you belong to" required>
+                  <Select
                     value={form.projectId}
                     onChange={(e) => handleChange('projectId', e.target.value)}
                     disabled={loadingProjects}
+                    required
                   >
                     {projects.length === 0 && (
                       <option value="">No projects available</option>
@@ -253,11 +197,11 @@ export default function CreateTask() {
                         {project.name}
                       </option>
                     ))}
-                  </SelectInput>
+                  </Select>
                 </FormField>
 
                 <FormField label="Status" hint="Start state for the task">
-                  <SelectInput
+                  <Select
                     value={form.status}
                     onChange={(e) => handleChange('status', e.target.value)}
                   >
@@ -266,12 +210,12 @@ export default function CreateTask() {
                         {status.label}
                       </option>
                     ))}
-                  </SelectInput>
+                  </Select>
                 </FormField>
               </div>
 
-              <FormField label="Assigned To" hint="Required and must belong to the project">
-                <SelectInput
+              <FormField label="Assigned To" hint="Required and must belong to the project" required>
+                <Select
                   value={form.assignedTo}
                   onChange={(e) => handleChange('assignedTo', e.target.value)}
                   disabled={loadingMembers || members.length === 0}
@@ -285,15 +229,16 @@ export default function CreateTask() {
                       {member.name || member.email} ({member.role})
                     </option>
                   ))}
-                </SelectInput>
+                </Select>
               </FormField>
 
-              <FormField label="Title" hint="Keep it short and clear">
-                <TextInput
+              <FormField label="Title" hint="Keep it short and clear" required>
+                <Input
                   placeholder="e.g. Set up CI/CD pipeline"
                   value={form.title}
                   onChange={(e) => handleChange('title', e.target.value)}
                   maxLength={120}
+                  required
                 />
               </FormField>
 
@@ -307,7 +252,7 @@ export default function CreateTask() {
               </FormField>
 
               <FormField label="Due date" hint="Optional">
-                <TextInput
+                <Input
                   type="date"
                   value={form.dueDate}
                   onChange={(e) => handleChange('dueDate', e.target.value)}

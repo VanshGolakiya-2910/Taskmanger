@@ -3,14 +3,15 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { registerUser, loginUser, refreshAccessToken, logoutUser, forgotPasswordService, resetPasswordService } from "../services/auth.service.js";
 import { validateForgotPassword, validateResetPassword } from "../validators/password.validator.js";
+import { COOKIE_OPTIONS, ACCESS_TOKEN_COOKIE_MAX_AGE, REFRESH_TOKEN_COOKIE_MAX_AGE } from "../config/constants.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await registerUser(req.body);
 
   res
     .cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      sameSite: "strict",
+      ...COOKIE_OPTIONS,
+      maxAge: REFRESH_TOKEN_COOKIE_MAX_AGE,
     })
     .status(201)
     .json(new ApiResponse(201, { accessToken }, "Registered"));
@@ -21,16 +22,12 @@ export const login = asyncHandler(async (req, res) => {
 
   res
     .cookie("accessToken", accessToken, {
-      httpOnly: true,
-      sameSite: "strict", // use "lax" if frontend is on different port
-      secure: false, // true in production (HTTPS)
-      maxAge: 15 * 60 * 1000, // 15 minutes
+      ...COOKIE_OPTIONS,
+      maxAge: ACCESS_TOKEN_COOKIE_MAX_AGE,
     })
     .cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      sameSite: "strict",
-      secure: false, // true in production (HTTPS)
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      ...COOKIE_OPTIONS,
+      maxAge: REFRESH_TOKEN_COOKIE_MAX_AGE,
     })
     .status(200)
     // Return accessToken in body so SPA clients (like the current frontend) can store it for Authorization headers.
@@ -42,7 +39,11 @@ export const refreshAccessTokenController = asyncHandler(async (req, res) => {
 
   res
     .status(200)
-    .cookie('accessToken', result.accessToken, result.cookieOptions)
+    .cookie('accessToken', result.accessToken, {
+      ...COOKIE_OPTIONS,
+      maxAge: ACCESS_TOKEN_COOKIE_MAX_AGE,
+      ...result.cookieOptions,
+    })
     .json(new ApiResponse(200, {
       accessToken: result.accessToken,
       user: result.user,
