@@ -4,7 +4,7 @@ import PageContainer from "../../components/layout/PageContainer";
 import Button from "../../components/ui/Button";
 import TaskCard from "./components/TaskCard";
 import CreateTaskModal from "./components/CreateTaskModal";
-import { TASK_STATUSES } from "../../utils/constants";
+import { TASK_STATUSES } from "../../utils/constant";
 import { getProjectTasksApi } from "../../api/task.api";
 import { useAuth } from "../../hooks/useAuth";
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import { AuthProvider } from './context/auth.context'
+import { AuthProvider } from './context/AuthProvider.jsx'
 import {ToastProvider} from './context/ToastProvider'
 import App from './App'
 import './index.css'

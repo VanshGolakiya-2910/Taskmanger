@@ -7,7 +7,7 @@ import {
   transferProjectOwnershipService,
   getUserProjectsService,
   getProjectMembersService,
-  
+  getProjectDetailsService,
 } from "../services/project.service.js";
 
 /* -------------------- CREATE PROJECT -------------------- */

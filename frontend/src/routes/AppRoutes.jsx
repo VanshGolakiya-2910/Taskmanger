@@ -1,21 +1,19 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import AppLayout from "../components/layout/AppLayout";
-import PageContainer from "../components/layout/PageContainer";
-import ProtectedRoute from "./ProtectedRoute";
-import Login from "../pages/auth/Login";
-import ProjectList from "../pages/projects/ProjectList";
-import ProjectDetails from "../pages/projects/ProjectDetails";
-
-const Dashboard = () => (
-  <PageContainer>
-    <h1 className="text-2xl font-semibold">Dashboard</h1>
-  </PageContainer>
-);
+import { Routes, Route, Navigate } from 'react-router-dom'
+import AppLayout from '../components/layout/AppLayout'
+import ProtectedRoute from './ProtectedRoute.jsx'
+import Login from '../pages/auth/Login'
+import Signup from '../pages/auth/Signup'
+import ProjectList from '../pages/projects/ProjectList'
+import ProjectDetails from '../pages/projects/ProjectDetails'
+import Dashboard from '../pages/dashboard/Dashboard'
+import CreateTask from '../pages/tasks/CreateTask'
 
 export default function AppRoutes() {
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
 
       <Route
         path="/dashboard"
@@ -38,6 +36,7 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/projects/:projectId"
         element={
@@ -48,6 +47,19 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/tasks/new"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <CreateTask />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
-  );
+  )
 }

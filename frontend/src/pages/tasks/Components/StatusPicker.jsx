@@ -1,4 +1,4 @@
-import { TASK_STATUSES } from '../../../utils/constants'
+import { TASK_STATUSES } from '../../../utils/constant'
 import Button from '../../../components/ui/Button'
 
 export default function StatusPicker({ current, onChange }) {

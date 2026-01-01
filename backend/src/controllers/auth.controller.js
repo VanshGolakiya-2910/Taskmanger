@@ -31,7 +31,8 @@ export const login = asyncHandler(async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
     .status(200)
-    .json(new ApiResponse(200, null, "Logged in"));
+    // Return accessToken in body so SPA clients (like the current frontend) can store it for Authorization headers.
+    .json(new ApiResponse(200, { accessToken }, "Logged in"));
 });
 
 export const refreshAccessTokenController = asyncHandler(async (req, res) => {
