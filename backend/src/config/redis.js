@@ -12,9 +12,19 @@ client.on("connect", () => {
   console.log("[redis] connected");
 });
 
-export async function initRedis() {
-  if (!client.isOpen) {
+export async function initRedis({ required = false } = {}) {
+  if (client.isOpen) return;
+
+  try {
     await client.connect();
+  } catch (err) {
+    const hint =
+      "Redis connection failed. Start Redis locally (e.g., `docker run -p 6379:6379 redis:7-alpine`) or set REDIS_URL to a reachable host.";
+    console.error("[redis] connect error", err.message, "\n", hint);
+
+    if (required || process.env.NODE_ENV === "production") {
+      throw err;
+    }
   }
 }
 

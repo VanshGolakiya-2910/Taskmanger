@@ -9,7 +9,7 @@ import { initRedis } from "./config/redis.js";
 const server = http.createServer(app);
 
 (async () => {
-  await Promise.all([runMigrations(), initRedis()]);
+  await Promise.all([runMigrations(), initRedis({ required: true })]);
 })();
 
 export const io = initSocketServer(server);

@@ -31,10 +31,8 @@ Production-ready collaboration platform with secure auth, caching, and real-time
 
 ## Prerequisites
 
-- Node.js 18+
-- MySQL 8+ (or compatible)
-- Redis 7+ (local Docker or hosted)
 
+If Redis is unreachable, server startup will fail (with a clear hint). Start a local Redis (e.g., `docker run -p 6379:6379 redis:7-alpine`) or set `REDIS_URL` to a reachable host.
 ## Quickstart
 
 ```bash
