@@ -18,11 +18,12 @@ import { useToast } from '../../hooks/useToast'
 import AddMemberModal from './components/AddMemberModal'
 import FileUpload from './components/FileUpload'
 
-function StatPill({ icon: Icon, label, value }) {
+// eslint-disable-next-line no-unused-vars
+function StatPill({ icon: IconComponent, label, value }) {
   return (
     <Card className="p-4 flex items-center gap-3">
       <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center">
-        <Icon className="w-5 h-5" />
+        <IconComponent className="w-5 h-5" />
       </div>
       <div>
         <p className="text-xs uppercase tracking-wide text-slate-500">{label}</p>
@@ -117,7 +118,7 @@ export default function ProjectDetails() {
       setProject(payload.project)
       setMembers(payload.members || [])
       setTasks(payload.tasks || [])
-    } catch (err) {
+    } catch {
       setError('Failed to load project details')
     } finally {
       setLoading(false)
@@ -126,6 +127,7 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     loadDetails()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId])
 
   const removeMember = async () => {
@@ -135,7 +137,7 @@ export default function ProjectDetails() {
       showToast('Member removed')
       setRemoveTarget(null)
       loadDetails()
-    } catch (err) {
+    } catch {
       showToast('Could not remove member', 'error')
     }
   }

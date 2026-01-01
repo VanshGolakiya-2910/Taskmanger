@@ -73,7 +73,7 @@ export default function TaskDetails() {
     try {
       const { data } = await getTaskByIdApi(projectId, taskId)
       setTask(data.data)
-    } catch (err) {
+    } catch {
       setError('Failed to load task')
     } finally {
       setLoading(false)
@@ -82,6 +82,7 @@ export default function TaskDetails() {
 
   useEffect(() => {
     loadTask()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId, taskId])
 
   const updateStatus = async (status) => {
@@ -91,7 +92,7 @@ export default function TaskDetails() {
       await updateTaskStatusApi(projectId, taskId, status)
       await loadTask()
       showToast('Status updated')
-    } catch (err) {
+    } catch {
       showToast('Could not update status', 'error')
     } finally {
       setStatusSaving(false)
@@ -105,7 +106,7 @@ export default function TaskDetails() {
       await deleteTaskApi(projectId, taskId)
       showToast('Task deleted')
       navigate(`/projects/${projectId}/tasks`)
-    } catch (err) {
+    } catch {
       showToast('Could not delete task', 'error')
     } finally {
       setDeleting(false)

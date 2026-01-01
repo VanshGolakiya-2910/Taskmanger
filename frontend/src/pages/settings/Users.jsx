@@ -59,7 +59,7 @@ export default function UsersManagement() {
 
   if (!isManager) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-6 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-6 flex items-center justify-center">
         <div className="max-w-md bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-8 text-center">
           <div className="w-12 h-12 rounded-full bg-red-500/20 mx-auto mb-4 flex items-center justify-center">
             <AlertCircle className="w-6 h-6 text-red-600" />
@@ -74,7 +74,7 @@ export default function UsersManagement() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-6">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
@@ -135,7 +135,7 @@ export default function UsersManagement() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 text-white font-medium shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="w-full px-4 py-2 rounded-lg bg-linear-to-r from-cyan-500 to-emerald-500 text-white font-medium shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition"
                 >
                   {loading ? 'Creating...' : 'Create User'}
                 </button>

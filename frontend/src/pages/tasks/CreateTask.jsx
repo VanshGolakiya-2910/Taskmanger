@@ -32,7 +32,7 @@ function TextInput(props) {
 }
 
 function TextArea(props) {
-  return <textarea className={`${inputBase} min-h-[120px] resize-vertical`} {...props} />
+  return <textarea className={`${inputBase} min-h-30 resize-vertical`} {...props} />
 }
 
 function SelectInput({ children, ...props }) {
@@ -90,7 +90,7 @@ export default function CreateTask() {
         if (!form.projectId && projectList[0]) {
           setForm((prev) => ({ ...prev, projectId: projectList[0].id }))
         }
-      } catch (error) {
+      } catch {
         if (mounted) {
           showToast('Failed to load projects', 'error')
         }
@@ -104,7 +104,7 @@ export default function CreateTask() {
     return () => {
       mounted = false
     }
-  }, [allowed, showToast])
+  }, [allowed, showToast, form.projectId])
 
   useEffect(() => {
     if (!form.projectId || !allowed) {
@@ -124,7 +124,7 @@ export default function CreateTask() {
         if (list.length > 0) {
           setForm((prev) => ({ ...prev, assignedTo: list[0].id }))
         }
-      } catch (error) {
+      } catch {
         if (mounted) {
           showToast('Failed to load members for this project', 'error')
           setMembers([])
@@ -171,7 +171,7 @@ export default function CreateTask() {
 
       showToast('Task created successfully')
       navigate(`/projects/${form.projectId}`)
-    } catch (error) {
+    } catch {
       showToast('Could not create task. Please try again.', 'error')
     } finally {
       setSubmitting(false)

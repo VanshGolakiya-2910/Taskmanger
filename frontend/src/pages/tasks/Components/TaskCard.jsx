@@ -2,7 +2,7 @@ import Card from '../../../components/ui/Card'
 import Badge from '../../../components/ui/Badge'
 import { useNavigate } from 'react-router-dom'
 
-export default function TaskCard({ task, projectId, onUpdated }) {
+export default function TaskCard({ task, projectId }) {
   const navigate = useNavigate()
 
   const goToDetails = () => {
