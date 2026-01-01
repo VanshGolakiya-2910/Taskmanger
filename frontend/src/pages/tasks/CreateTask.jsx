@@ -14,10 +14,10 @@ function FormField({ label, hint, children }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-slate-700 dark:text-slate-200">
+        <label className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
           {label}
         </label>
-        {hint && <span className="text-xs text-slate-500">{hint}</span>}
+        {hint && <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>{hint}</span>}
       </div>
       {children}
     </div>
@@ -25,19 +25,47 @@ function FormField({ label, hint, children }) {
 }
 
 const inputBase =
-  'w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-900/60'
+  'w-full rounded-lg border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-900/60'
 
 function TextInput(props) {
-  return <input className={inputBase} {...props} />
+  return (
+    <input
+      style={{
+        backgroundColor: 'var(--input-bg)',
+        borderColor: 'var(--input-border)',
+        color: 'var(--text-primary)',
+      }}
+      className={inputBase}
+      {...props}
+    />
+  )
 }
 
 function TextArea(props) {
-  return <textarea className={`${inputBase} min-h-30 resize-vertical`} {...props} />
+  return (
+    <textarea
+      style={{
+        backgroundColor: 'var(--input-bg)',
+        borderColor: 'var(--input-border)',
+        color: 'var(--text-primary)',
+      }}
+      className={`${inputBase} min-h-30 resize-vertical`}
+      {...props}
+    />
+  )
 }
 
 function SelectInput({ children, ...props }) {
   return (
-    <select className={`${inputBase} h-11`} {...props}>
+    <select
+      style={{
+        backgroundColor: 'var(--input-bg)',
+        borderColor: 'var(--input-border)',
+        color: 'var(--text-primary)',
+      }}
+      className={`${inputBase} h-11`}
+      {...props}
+    >
       {children}
     </select>
   )

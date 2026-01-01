@@ -6,11 +6,7 @@ const baseItemClass =
   'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition'
 
 const linkClass = ({ isActive }) =>
-  `${baseItemClass} ${
-    isActive
-      ? 'bg-slate-900 text-white shadow-sm'
-      : 'hover:opacity-80'
-  }`
+  `${baseItemClass} ${isActive ? 'shadow-sm' : 'hover:opacity-80'}`
 
 export default function Sidebar() {
   const { user } = useAuth()
@@ -33,8 +29,10 @@ export default function Sidebar() {
             to="/dashboard" 
             className={linkClass}
             style={({ isActive }) => ({
-              backgroundColor: isActive ? 'var(--bg-primary)' : 'transparent',
-              color: isActive ? '#ffffff' : 'var(--text-primary)',
+              backgroundColor: isActive ? 'var(--bg-tertiary)' : 'transparent',
+              color: 'var(--text-primary)',
+              borderLeft: isActive ? '3px solid var(--border-color)' : '3px solid transparent',
+              paddingLeft: '0.65rem',
             })}
           >
             <LayoutDashboard className="w-5 h-5" />
@@ -45,8 +43,10 @@ export default function Sidebar() {
             to="/projects" 
             className={linkClass}
             style={({ isActive }) => ({
-              backgroundColor: isActive ? 'var(--bg-primary)' : 'transparent',
-              color: isActive ? '#ffffff' : 'var(--text-primary)',
+              backgroundColor: isActive ? 'var(--bg-tertiary)' : 'transparent',
+              color: 'var(--text-primary)',
+              borderLeft: isActive ? '3px solid var(--border-color)' : '3px solid transparent',
+              paddingLeft: '0.65rem',
             })}
           >
             <Folder className="w-5 h-5" />
@@ -57,8 +57,10 @@ export default function Sidebar() {
             to="/tasks/new" 
             className={linkClass}
             style={({ isActive }) => ({
-              backgroundColor: isActive ? 'var(--bg-primary)' : 'transparent',
-              color: isActive ? '#ffffff' : 'var(--text-primary)',
+              backgroundColor: isActive ? 'var(--bg-tertiary)' : 'transparent',
+              color: 'var(--text-primary)',
+              borderLeft: isActive ? '3px solid var(--border-color)' : '3px solid transparent',
+              paddingLeft: '0.65rem',
             })}
           >
             <Plus className="w-5 h-5" />
@@ -72,8 +74,10 @@ export default function Sidebar() {
               to="/users" 
               className={linkClass}
               style={({ isActive }) => ({
-                backgroundColor: isActive ? 'var(--bg-primary)' : 'transparent',
-                color: isActive ? '#ffffff' : 'var(--text-primary)',
+                backgroundColor: isActive ? 'var(--bg-tertiary)' : 'transparent',
+                color: 'var(--text-primary)',
+                borderLeft: isActive ? '3px solid var(--border-color)' : '3px solid transparent',
+                paddingLeft: '0.65rem',
               })}
             >
               <Users className="w-5 h-5" />
