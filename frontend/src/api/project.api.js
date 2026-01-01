@@ -6,6 +6,9 @@ export const getMyProjectsApi = () =>
 export const getProjectByIdApi = (projectId) =>
   api.get(`/projects/${projectId}`)
 
+export const getProjectDetailsApi = (projectId) =>
+  api.get(`/projects/${projectId}`)
+
 export const createProjectApi = (payload) =>
   api.post('/projects', payload)
 

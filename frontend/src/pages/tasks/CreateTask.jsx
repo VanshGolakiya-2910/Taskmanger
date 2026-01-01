@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import PageContainer from '../../components/layout/PageContainer'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
@@ -45,6 +45,7 @@ function SelectInput({ children, ...props }) {
 
 export default function CreateTask() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { user } = useAuth()
   const { showToast } = useToast()
 
@@ -59,8 +60,10 @@ export default function CreateTask() {
     []
   )
 
+  const initialProjectId = location.state?.projectId || ''
+
   const [form, setForm] = useState({
-    projectId: '',
+    projectId: initialProjectId,
     title: '',
     description: '',
     dueDate: '',

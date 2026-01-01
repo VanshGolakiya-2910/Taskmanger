@@ -24,7 +24,7 @@ export default function CommentsPanel({ projectId, taskId }) {
 
   const submit = async () => {
     if (!content.trim()) return
-    await addCommentApi(taskId, { content })
+    await addCommentApi(projectId, taskId, { content })
     setContent('')
     const { data } = await getTaskCommentsApi(projectId, taskId)
     setComments(data.data)
@@ -34,16 +34,29 @@ export default function CommentsPanel({ projectId, taskId }) {
 
   return (
     <div className="space-y-3">
-      <Card className="p-3 space-y-2">
+      <Card className="p-3 space-y-3">
         {comments.length === 0 ? (
           <p className="text-sm text-slate-500">No comments yet.</p>
         ) : (
-          comments.map((c) => (
-            <div key={c.id} className="text-sm">
-              <span className="font-medium">{c.userEmail}</span>{' '}
-              <span className="text-slate-500">{c.content}</span>
-            </div>
-          ))
+          comments.map((c) => {
+            const initials = (c.author || '??')
+              .slice(0, 2)
+              .toUpperCase()
+            return (
+              <div
+                key={c.id}
+                className="flex items-start gap-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 px-3 py-2"
+              >
+                <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-semibold">
+                  {initials}
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-slate-900 dark:text-white">{c.userEmail}</p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5 leading-relaxed">{c.content}</p>
+                </div>
+              </div>
+            )
+          })
         )}
       </Card>
 

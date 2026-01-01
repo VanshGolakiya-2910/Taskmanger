@@ -8,3 +8,10 @@ export const getMeApi = () =>
 
 export const logoutApi = () =>
   api.post('/auth/logout')
+
+// Only managers can create users
+export const createUserApi = (payload) =>
+  api.post('/users/create', payload)
+
+export const updateProfileApi = (payload) =>
+  api.put('/users/me', payload)

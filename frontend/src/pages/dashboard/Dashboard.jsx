@@ -213,15 +213,13 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 p-6">
-            <div className="flex items-center justify-between mb-4">
+          <Card className="lg:col-span-2 p-5 md:p-4 space-y-5">
+            <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  Tasks by Status
+                  Tasks overview
                 </h2>
-                <p className="text-sm text-slate-500">
-                  Overview of your assigned work.
-                </p>
+                <p className="text-sm text-slate-500">Your assigned work at a glance.</p>
               </div>
               <Badge color="slate">{totalTasks} tasks</Badge>
             </div>
@@ -242,10 +240,46 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
+            {recentTasks.length > 0 && (
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white">My tasks</h3>
+                  <p className="text-xs text-slate-500">Last 5 assigned</p>
+                </div>
+                <div className="space-y-3">
+                  {recentTasks.map((task) => {
+                    const taskProjectId = task.projectId || task.project_id
+                    return (
+                      <div
+                        key={`${task.id}-${taskProjectId}`}
+                        className="rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800"
+                        onClick={() => navigate(`/projects/${taskProjectId}/tasks/${task.id}`)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium text-slate-900 dark:text-white line-clamp-1">
+                            {task.title}
+                          </p>
+                          <Badge
+                            color={
+                              TASK_STATUSES.find((s) => s.key === task.status)?.color || 'slate'
+                            }
+                          >
+                            {task.status}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-1 line-clamp-1">
+                          Project: {projectNameById[taskProjectId] || 'Unknown'}
+                        </p>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
           </Card>
 
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
+          <Card className="p-5 md:p-4 space-y-3">
+            <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
                   Quick Links
@@ -271,7 +305,8 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => navigate(`/projects/${projects[0].id}`)}
-                  className="w-full text-left rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800"
+                  className="w-full text-left rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                  style={{ cursor: 'pointer' }}
                 >
                   <p className="font-medium text-slate-900 dark:text-white">Latest project</p>
                   <p className="text-sm text-slate-500">
@@ -280,24 +315,24 @@ export default function Dashboard() {
                 </button>
               )}
 
-              {totalTasks > 0 ? (
-                <div className="rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3">
-                  <p className="font-medium text-slate-900 dark:text-white">Tasks in progress</p>
+              <Link
+                to={projects[0] ? `/projects/${projects[0].id}` : '/projects'}
+                className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800"
+              >
+                <div>
+                  <p className="font-medium text-slate-900 dark:text-white">Latest project</p>
                   <p className="text-sm text-slate-500">
-                    {openTasks} open / {totalTasks} total
+                    {projects[0]?.name || 'Open projects'}
                   </p>
                 </div>
-              ) : (
-                <div className="rounded-lg border border-dashed border-slate-200 dark:border-slate-700 px-4 py-3 text-sm text-slate-500">
-                  No tasks yet. Create one from a project.
-                </div>
-              )}
+                <Folder className="w-5 h-5 text-slate-500" />
+              </Link>
             </div>
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          <Card className="p-6">
+        <div className="grid grid-cols-1 gap-6">
+          <Card className="p-5 md:p-4">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
@@ -309,9 +344,10 @@ export default function Dashboard() {
             </div>
 
             {projects.length === 0 ? (
-              <p className="text-sm text-slate-500">
-                You are not part of any projects yet.
-              </p>
+              <Card className="p-4 bg-slate-50 dark:bg-slate-900/60 border-dashed text-sm text-slate-600 dark:text-slate-300">
+                <p className="font-medium text-slate-900 dark:text-white">No projects yet</p>
+                <p className="mt-1">Create a project or ask a manager to add you.</p>
+              </Card>
             ) : (
               <div className="space-y-3">
                 {projects.slice(0, 4).map((project) => {
@@ -321,7 +357,8 @@ export default function Dashboard() {
                       key={project.id}
                       type="button"
                       onClick={() => navigate(`/projects/${project.id}`)}
-                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-800"
+                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                      style={{ cursor: 'pointer' }}
                     >
                       <div className="flex items-center justify-between">
                         <div>
@@ -333,51 +370,6 @@ export default function Dashboard() {
                         <Badge color="slate">{taskCount} tasks</Badge>
                       </div>
                     </button>
-                  )
-                })}
-              </div>
-            )}
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                  My Tasks
-                </h2>
-                <p className="text-sm text-slate-500">Recently assigned to you.</p>
-              </div>
-              <Badge color="green">{totalTasks}</Badge>
-            </div>
-
-            {recentTasks.length === 0 ? (
-              <p className="text-sm text-slate-500">No tasks assigned yet.</p>
-            ) : (
-              <div className="space-y-3">
-                {recentTasks.map((task) => {
-                  const taskProjectId = task.projectId || task.project_id
-
-                  return (
-                    <div
-                      key={`${task.id}-${taskProjectId}`}
-                      className="rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3"
-                    >
-                      <div className="flex items-center justify-between">
-                        <p className="font-medium text-slate-900 dark:text-white">
-                          {task.title}
-                        </p>
-                        <Badge
-                          color={
-                            TASK_STATUSES.find((s) => s.key === task.status)?.color || 'slate'
-                          }
-                        >
-                          {task.status}
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-slate-500 mt-1">
-                        Project: {projectNameById[taskProjectId] || 'Unknown'}
-                      </p>
-                    </div>
                   )
                 })}
               </div>

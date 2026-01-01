@@ -10,7 +10,7 @@ import { requireProjectMember } from "../middlewares/projectMember.middleware.js
 const router = express.Router();
 
 router.post(
-  "/projects/:projectId/tasks/:taskId/comments",
+  "/projects/:projectId/tasks/:taskId",
   authenticate,
   projectScope,
   requireProjectMember,
@@ -18,7 +18,7 @@ router.post(
 );
 
 router.get(
-  "/projects/:projectId/tasks/:taskId/comments",
+  "/projects/:projectId/tasks/:taskId/",
   authenticate,
   projectScope,
   requireProjectMember,

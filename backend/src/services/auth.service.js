@@ -152,3 +152,20 @@ export const refreshAccessToken = async (req) => {
     }
   };
 };
+
+/* ======================
+   LOGOUT
+   ====================== */
+
+export const logoutUser = async (req) => {
+  const refreshToken = req.cookies?.refreshToken;
+
+  if (refreshToken) {
+    await pool.query(
+      `DELETE FROM refresh_tokens WHERE token_hash = ?`,
+      [refreshToken]
+    );
+  }
+
+  return true;
+};

@@ -1,6 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { registerUser, loginUser, refreshAccessToken } from "../services/auth.service.js";
+import { registerUser, loginUser, refreshAccessToken, logoutUser } from "../services/auth.service.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await registerUser(req.body);
@@ -41,5 +41,18 @@ export const refreshAccessTokenController = asyncHandler(async (req, res) => {
   res
     .status(200)
     .cookie('accessToken', result.accessToken, result.cookieOptions)
-    .json(new ApiResponse(200, { user: result.user }));
+    .json(new ApiResponse(200, {
+      accessToken: result.accessToken,
+      user: result.user,
+    }));
+});
+
+export const logout = asyncHandler(async (req, res) => {
+  await logoutUser(req);
+
+  res
+    .clearCookie('accessToken')
+    .clearCookie('refreshToken')
+    .status(200)
+    .json(new ApiResponse(200, null, 'Logged out'));
 });
