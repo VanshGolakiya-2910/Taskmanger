@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Lock, Mail, Eye, EyeOff, User } from 'lucide-react'
+import { Lock, Mail, Eye, EyeOff, User, Pencil } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import { updateProfileApi } from '../../api/auth.api'
@@ -8,6 +8,7 @@ export default function Settings() {
   const { user } = useAuth()
   const { showToast } = useToast()
   const [loading, setLoading] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
   const [showPasswords, setShowPasswords] = useState({ current: false, new: false })
 
   const [name, setName] = useState(user?.name || '')
@@ -18,6 +19,7 @@ export default function Settings() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!isEditing) return
     setLoading(true)
 
     try {
@@ -62,6 +64,8 @@ export default function Settings() {
       const response = await updateProfileApi(payload)
       showToast(response.data.message || 'Profile updated successfully', 'success')
 
+      setIsEditing(false)
+
       // Clear password fields
       setCurrentPassword('')
       setNewPassword('')
@@ -81,8 +85,25 @@ export default function Settings() {
     >
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Settings</h1>
-          <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>Manage your account and security preferences</p>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Settings</h1>
+              <p className="mt-2" style={{ color: 'var(--text-secondary)' }}>Manage your account and security preferences</p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsEditing((prev) => !prev)}
+              className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition hover:bg-slate-50"
+              style={{
+                borderColor: 'var(--card-border)',
+                color: 'var(--text-primary)',
+              }}
+            >
+              <Pencil className="w-4 h-4" />
+              {isEditing ? 'Stop editing' : 'Edit'}
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -102,6 +123,7 @@ export default function Settings() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                disabled={!isEditing}
                 className="w-full px-4 py-2 rounded-lg border focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition"
                 style={{
                   backgroundColor: 'var(--input-bg)',
@@ -130,6 +152,7 @@ export default function Settings() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={!isEditing}
                 className="w-full px-4 py-2 rounded-lg border focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition"
                 style={{
                   backgroundColor: 'var(--input-bg)',
@@ -160,6 +183,7 @@ export default function Settings() {
                     type={showPasswords.current ? 'text' : 'password'}
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
+                    disabled={!isEditing}
                     className="w-full px-4 py-2 rounded-lg border focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition pr-10"
                     style={{
                       backgroundColor: 'var(--input-bg)',
@@ -171,6 +195,7 @@ export default function Settings() {
                   <button
                     type="button"
                     onClick={() => setShowPasswords({ ...showPasswords, current: !showPasswords.current })}
+                    disabled={!isEditing}
                     className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-80"
                     style={{ color: 'var(--text-secondary)' }}
                   >
@@ -187,6 +212,7 @@ export default function Settings() {
                     type={showPasswords.new ? 'text' : 'password'}
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
+                    disabled={!isEditing}
                     className="w-full px-4 py-2 rounded-lg border focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition pr-10"
                     style={{
                       backgroundColor: 'var(--input-bg)',
@@ -198,6 +224,7 @@ export default function Settings() {
                   <button
                     type="button"
                     onClick={() => setShowPasswords({ ...showPasswords, new: !showPasswords.new })}
+                    disabled={!isEditing}
                     className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-80"
                     style={{ color: 'var(--text-secondary)' }}
                   >
@@ -214,6 +241,7 @@ export default function Settings() {
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
+                    disabled={!isEditing}
                     className="w-full px-4 py-2 rounded-lg border focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition"
                     style={{
                       backgroundColor: 'var(--input-bg)',
@@ -233,7 +261,7 @@ export default function Settings() {
           {/* Save Button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !isEditing}
             className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-cyan-500 to-emerald-500 text-white font-medium shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             {loading ? 'Saving...' : 'Save Changes'}
