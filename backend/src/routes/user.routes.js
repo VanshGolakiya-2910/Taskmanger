@@ -1,6 +1,6 @@
 import express from "express";
 import { authenticate } from "../middlewares/auth.middleware.js";
-import { getMe, getAllUsers, createUser, updateProfile } from "../controllers/user.controller.js";
+import { getMe, getAllUsers, getAvailableUsers, createUser, updateProfile } from "../controllers/user.controller.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 const router = express.Router();
@@ -14,6 +14,14 @@ router.get(
   authenticate,
   authorizeRoles("manager", "project_manager"),
   getAllUsers
+);
+
+// Get available users with project assignments (manager/project_manager only)
+router.get(
+  "/available",
+  authenticate,
+  authorizeRoles("manager", "project_manager"),
+  getAvailableUsers
 );
 
 // Create user (manager/project_manager only)

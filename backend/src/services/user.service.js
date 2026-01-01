@@ -47,6 +47,48 @@ export const getAllUsersService = async (requestingUser) => {
 };
 
 /* ======================
+   GET AVAILABLE USERS WITH PROJECT ASSIGNMENTS
+   ====================== */
+
+export const getAvailableUsersService = async (requestingUser) => {
+  // Only managers and project managers can view this
+  if (!["manager", "project_manager"].includes(requestingUser.role)) {
+    throw new ApiError(403, "Forbidden");
+  }
+
+  const [users] = await pool.query(
+    `
+    SELECT
+      u.id,
+      u.email,
+      u.name,
+      u.role,
+      GROUP_CONCAT(
+        CONCAT(p.id, ':', p.name)
+        ORDER BY p.name
+        SEPARATOR '||'
+      ) as projects
+    FROM users u
+    LEFT JOIN project_members pm ON u.id = pm.user_id
+    LEFT JOIN projects p ON pm.project_id = p.id
+    GROUP BY u.id
+    ORDER BY u.name, u.email
+    `
+  );
+
+  // Parse the projects string into an array of objects
+  return users.map(user => ({
+    ...user,
+    projects: user.projects 
+      ? user.projects.split('||').map(proj => {
+          const [id, name] = proj.split(':');
+          return { id: parseInt(id), name };
+        })
+      : []
+  }));
+};
+
+/* ======================
    CREATE USER (MANAGER ONLY)
    ====================== */
 

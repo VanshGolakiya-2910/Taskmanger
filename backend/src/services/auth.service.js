@@ -1,5 +1,6 @@
 import pool from "../config/db.js";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 import { ApiError } from "../utils/ApiError.js";
 import { hashPassword, comparePassword } from "../utils/password.js";
 import {
@@ -168,4 +169,103 @@ export const logoutUser = async (req) => {
   }
 
   return true;
+};
+
+/* ======================
+   FORGOT PASSWORD
+   ====================== */
+
+export const forgotPasswordService = async ({ email }) => {
+  // Check if user exists
+  const [[user]] = await pool.query(
+    "SELECT id, email, name FROM users WHERE email = ?",
+    [email]
+  );
+
+  if (!user) {
+    // Don't reveal if email exists or not (security best practice)
+    return { success: true, message: "If the email exists, a reset token has been generated" };
+  }
+
+  // Generate a secure random token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+  // Token expires in 1 hour
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+  // Delete any existing unused tokens for this user
+  await pool.query(
+    "DELETE FROM password_reset_tokens WHERE user_id = ? AND used = FALSE",
+    [user.id]
+  );
+
+  // Store the hashed token
+  await pool.query(
+    `INSERT INTO password_reset_tokens (user_id, token_hash, expires_at)
+     VALUES (?, ?, ?)`,
+    [user.id, tokenHash, expiresAt]
+  );
+
+  // In production, you would send this via email
+  // For now, we return it (ONLY FOR DEVELOPMENT)
+  return {
+    success: true,
+    resetToken, // REMOVE THIS IN PRODUCTION
+    email: user.email,
+    message: "Password reset token generated"
+  };
+};
+
+/* ======================
+   RESET PASSWORD
+   ====================== */
+
+export const resetPasswordService = async ({ token, newPassword }) => {
+  // Hash the token to compare with stored hash
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+  // Find valid token
+  const [[resetToken]] = await pool.query(
+    `SELECT id, user_id, expires_at, used
+     FROM password_reset_tokens
+     WHERE token_hash = ?`,
+    [tokenHash]
+  );
+
+  if (!resetToken) {
+    throw new ApiError(400, "Invalid or expired reset token");
+  }
+
+  if (resetToken.used) {
+    throw new ApiError(400, "Reset token has already been used");
+  }
+
+  if (new Date(resetToken.expires_at) < new Date()) {
+    throw new ApiError(400, "Reset token has expired");
+  }
+
+  // Update user password
+  const passwordHash = await hashPassword(newPassword);
+  await pool.query(
+    "UPDATE users SET password_hash = ? WHERE id = ?",
+    [passwordHash, resetToken.user_id]
+  );
+
+  // Mark token as used
+  await pool.query(
+    "UPDATE password_reset_tokens SET used = TRUE WHERE id = ?",
+    [resetToken.id]
+  );
+
+  // Invalidate all refresh tokens (logout from all devices)
+  await pool.query(
+    "DELETE FROM refresh_tokens WHERE user_id = ?",
+    [resetToken.user_id]
+  );
+
+  return {
+    success: true,
+    message: "Password has been reset successfully"
+  };
 };

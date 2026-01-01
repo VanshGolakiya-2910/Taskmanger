@@ -59,6 +59,31 @@ export const addProjectMemberService = async ({
     throw new ApiError(404, "Project not found");
   }
 
+  // Check if user exists and get their global role
+  const [[user]] = await pool.query(
+    "SELECT id, role FROM users WHERE id = ?",
+    [targetUserId]
+  );
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // Check if project_manager or member is already in another project
+  if (user.role !== "manager") {
+    const [existingProjects] = await pool.query(
+      "SELECT project_id FROM project_members WHERE user_id = ?",
+      [targetUserId]
+    );
+
+    if (existingProjects.length > 0) {
+      throw new ApiError(
+        409,
+        `${user.role === "project_manager" ? "Project managers" : "Members"} can only be assigned to one project. This user is already in another project.`
+      );
+    }
+  }
+
   try {
     await pool.query(
       `INSERT INTO project_members (user_id, project_id, project_role)

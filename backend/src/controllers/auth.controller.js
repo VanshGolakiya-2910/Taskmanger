@@ -1,6 +1,8 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { registerUser, loginUser, refreshAccessToken, logoutUser } from "../services/auth.service.js";
+import { ApiError } from "../utils/ApiError.js";
+import { registerUser, loginUser, refreshAccessToken, logoutUser, forgotPasswordService, resetPasswordService } from "../services/auth.service.js";
+import { validateForgotPassword, validateResetPassword } from "../validators/password.validator.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await registerUser(req.body);
@@ -55,4 +57,26 @@ export const logout = asyncHandler(async (req, res) => {
     .clearCookie('refreshToken')
     .status(200)
     .json(new ApiResponse(200, null, 'Logged out'));
+});
+
+export const forgotPassword = asyncHandler(async (req, res) => {
+  validateForgotPassword(req.body);
+  
+  const { email } = req.body;
+  const result = await forgotPasswordService({ email });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, result, result.message));
+});
+
+export const resetPassword = asyncHandler(async (req, res) => {
+  validateResetPassword(req.body);
+  
+  const { token, newPassword } = req.body;
+  const result = await resetPasswordService({ token, newPassword });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, result, result.message));
 });

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AuthContext } from './auth.context'
-import { loginApi, getMeApi, logoutApi } from '../api/auth.api'
+import { loginApi, getMeApi, logoutApi, refreshTokenApi } from '../api/auth.api'
 import { setAccessToken } from '../api/axios'
 
 export function AuthProvider({ children }) {
@@ -25,6 +25,11 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     (async () => {
       try {
+        // Try to refresh the token first
+        const { data } = await refreshTokenApi()
+        setAccessToken(data.data.accessToken)
+        
+        // Then fetch user data
         const me = await getMeApi()
         setUser(me.data.data)
       } catch {

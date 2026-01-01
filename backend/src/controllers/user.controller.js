@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
-import { getCurrentUserService, getAllUsersService, createUserByManagerService, updateUserProfileService } from "../services/user.service.js";
+import { getCurrentUserService, getAllUsersService, getAvailableUsersService, createUserByManagerService, updateUserProfileService } from "../services/user.service.js";
 
 export const getMe = asyncHandler(async (req, res) => {
   const user = await getCurrentUserService(req.user.id);
@@ -17,6 +17,14 @@ export const getAllUsers = asyncHandler(async (req, res) => {
   res
     .status(200)
     .json(new ApiResponse(200, users, "Users fetched"));
+});
+
+export const getAvailableUsers = asyncHandler(async (req, res) => {
+  const users = await getAvailableUsersService(req.user);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, users, "Available users fetched"));
 });
 
 export const createUser = asyncHandler(async (req, res) => {
