@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
-import { ChatContext, ChatProvider } from './chat.context'
+import { ChatContext, ChatProvider } from './chat.context.jsx'
 import {
   initSocket,
-  disconnectSocket,
   joinProject,
   leaveProject,
   sendMessage,
@@ -23,7 +22,6 @@ export function ChatProviderComponent({ children, accessToken }) {
   useEffect(() => {
     if (accessToken) {
       const socket = initSocket(accessToken)
-      setIsConnected(socket.connected)
 
       const onConnect = () => setIsConnected(true)
       const onDisconnect = () => setIsConnected(false)
