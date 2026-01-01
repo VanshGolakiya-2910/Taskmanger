@@ -18,9 +18,13 @@ export function ChatProviderComponent({ children, accessToken }) {
   const [activeProjectId, setActiveProjectId] = useState(null)
   const [isConnected, setIsConnected] = useState(false)
 
+  console.log('💬 ChatProvider rendered with accessToken:', !!accessToken)
+
   // Initialize socket on mount
   useEffect(() => {
+    console.log('💬 ChatProvider useEffect - accessToken:', !!accessToken, accessToken?.substring(0, 20))
     if (accessToken) {
+      console.log('💬 Calling initSocket...')
       const socket = initSocket(accessToken)
 
       const onConnect = () => setIsConnected(true)
