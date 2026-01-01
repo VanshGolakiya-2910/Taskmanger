@@ -47,24 +47,24 @@ function SectionHeader({ title, action }) {
 function MemberRow({ member, canManage, onRemove }) {
   const displayName = member.name || member.email
   return (
-    <Card className="p-4 flex items-center justify-between">
-      <div>
-        <p className="font-medium text-slate-900 dark:text-white">{displayName}</p>
-        <p className="text-xs text-slate-500">
-          Workspace: {member.global_role} · Project: {member.project_role}
-        </p>
+    <div className="group flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+      <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold">
+        {displayName.slice(0, 1).toUpperCase()}
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="font-medium text-slate-900 dark:text-white text-sm truncate">{displayName}</p>
+        <p className="text-xs text-slate-500 truncate">{member.project_role}</p>
       </div>
       {canManage && (
-        <Button
-          variant="danger"
-          className="px-3 py-1.5"
+        <button
           onClick={() => onRemove(member)}
+          className="opacity-0 group-hover:opacity-100 p-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-400 hover:text-red-600 transition-all cursor-pointer"
+          title="Remove member"
         >
-          <Trash className="w-4 h-4 mr-2" />
-          Remove
-        </Button>
+          <Trash className="w-4 h-4" />
+        </button>
       )}
-    </Card>
+    </div>
   )
 }
 
@@ -258,39 +258,36 @@ export default function ProjectDetails() {
             <SectionHeader
               title="Members"
               action={
-                canManage ? (
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="secondary"
-                      className="gap-2" 
-                      onClick={() => navigate(`/projects/${projectId}/members`)}
-                    >
-                      <ArrowUpRight className="w-4 h-4" />
-                      View all
-                    </Button>
-                    <Button className="gap-2" onClick={() => setOpenAdd(true)}>
-                      <UserPlus className="w-4 h-4" />
-                      Add
-                    </Button>
-                  </div>
-                ) : (
-                  <Button 
-                    variant="secondary"
-                    className="gap-2" 
+                <div className="flex items-center gap-1">
+                  <button
                     onClick={() => navigate(`/projects/${projectId}/members`)}
+                    className="group relative p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
                   >
                     <ArrowUpRight className="w-4 h-4" />
-                    View all
-                  </Button>
-                )
+                    <span className="absolute hidden group-hover:block -bottom-8 right-0 px-2 py-1 text-xs bg-slate-900 dark:bg-slate-700 text-white rounded whitespace-nowrap">
+                      View all
+                    </span>
+                  </button>
+                  {canManage && (
+                    <button
+                      onClick={() => setOpenAdd(true)}
+                      className="group relative p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
+                    >
+                      <UserPlus className="w-4 h-4" />
+                      <span className="absolute hidden group-hover:block -bottom-8 right-0 px-2 py-1 text-xs bg-slate-900 dark:bg-slate-700 text-white rounded whitespace-nowrap">
+                        Add member
+                      </span>
+                    </button>
+                  )}
+                </div>
               }
             />
 
             {members.length === 0 ? (
               <p className="text-sm text-slate-500">No members yet.</p>
             ) : (
-              <div className="space-y-3">
-                {members.map((member) => (
+              <div className="space-y-2">
+                {members.slice(0, 4).map((member) => (
                   <MemberRow
                     key={member.id}
                     member={member}
@@ -298,6 +295,11 @@ export default function ProjectDetails() {
                     onRemove={setRemoveTarget}
                   />
                 ))}
+                {members.length > 4 && (
+                  <p className="text-xs text-slate-400 pt-2">
+                    +{members.length - 4} more member{members.length - 4 !== 1 ? 's' : ''}
+                  </p>
+                )}
               </div>
             )}
           </Card>
