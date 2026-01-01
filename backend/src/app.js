@@ -15,7 +15,6 @@ import userRoutes from "./routes/user.routes.js";
 
 //middlewares
 import { errorHandler } from "./middlewares/error.middleware.js";
-import { pingRedis } from "./config/redis.js";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -100,16 +99,6 @@ app.use("/api/v1/users", userRoutes);
 // Health check
 app.get("/", (req, res) => {
   res.status(200).json({ message: "API is running" });
-});
-
-// Redis health
-app.get("/health/redis", async (req, res) => {
-  try {
-    const pong = await pingRedis();
-    res.status(200).json({ status: "ok", pong });
-  } catch (err) {
-    res.status(503).json({ status: "error", message: err.message });
-  }
 });
 
 /* -------------------- 404 HANDLER -------------------- */
