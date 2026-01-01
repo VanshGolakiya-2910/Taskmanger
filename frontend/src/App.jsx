@@ -7,8 +7,6 @@ export default function App() {
   const { user } = useAuth()
   const accessToken = getAccessToken()
 
-  console.log('🚀 App.jsx - user:', !!user, 'accessToken:', !!accessToken)
-
   return (
     <ChatProviderComponent accessToken={accessToken}>
       <AppRoutes />

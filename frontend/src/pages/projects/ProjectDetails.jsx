@@ -215,8 +215,18 @@ export default function ProjectDetails() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatPill icon={Folder} label="Project ID" value={`#${project.id}`} />
-          <StatPill icon={Users} label="Members" value={members.length} />
-          <StatPill icon={ListTodo} label="Tasks" value={tasks.length} />
+          <button 
+            onClick={() => navigate(`/projects/${projectId}/members`)}
+            className="text-left hover:scale-105 transition-transform"
+          >
+            <StatPill icon={Users} label="Members" value={members.length} />
+          </button>
+          <button 
+            onClick={() => navigate(`/projects/${projectId}/tasks`)}
+            className="text-left hover:scale-105 transition-transform"
+          >
+            <StatPill icon={ListTodo} label="Tasks" value={tasks.length} />
+          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -249,11 +259,30 @@ export default function ProjectDetails() {
               title="Members"
               action={
                 canManage ? (
-                  <Button className="gap-2" onClick={() => setOpenAdd(true)}>
-                    <UserPlus className="w-4 h-4" />
-                    Add
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="secondary"
+                      className="gap-2" 
+                      onClick={() => navigate(`/projects/${projectId}/members`)}
+                    >
+                      <ArrowUpRight className="w-4 h-4" />
+                      View all
+                    </Button>
+                    <Button className="gap-2" onClick={() => setOpenAdd(true)}>
+                      <UserPlus className="w-4 h-4" />
+                      Add
+                    </Button>
+                  </div>
+                ) : (
+                  <Button 
+                    variant="secondary"
+                    className="gap-2" 
+                    onClick={() => navigate(`/projects/${projectId}/members`)}
+                  >
+                    <ArrowUpRight className="w-4 h-4" />
+                    View all
                   </Button>
-                ) : null
+                )
               }
             />
 

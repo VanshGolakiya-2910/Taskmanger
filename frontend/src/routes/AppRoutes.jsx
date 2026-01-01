@@ -6,12 +6,14 @@ import ForgotPassword from '../pages/auth/ForgotPassword.jsx'
 import ResetPassword from '../pages/auth/ResetPassword.jsx'
 import ProjectList from '../pages/projects/ProjectList'
 import ProjectDetails from '../pages/projects/ProjectDetails'
+import ProjectMembers from '../pages/projects/ProjectMembers'
 import Dashboard from '../pages/dashboard/Dashboard'
 import CreateTask from '../pages/tasks/CreateTask'
 import TaskBoard from '../pages/tasks/TaskBoard'
 import TaskDetails from '../pages/tasks/TaskDetails'
 import Settings from '../pages/settings/Settings'
 import Users from '../pages/settings/Users'
+import ChatPage from '../pages/chat/ChatPage'
 
 export default function AppRoutes() {
   return (
@@ -49,6 +51,28 @@ export default function AppRoutes() {
           <ProtectedRoute>
             <AppLayout>
               <ProjectDetails />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/projects/:projectId/chat"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ChatPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/projects/:projectId/members"
+        element={
+          <ProtectedRoute>
+            <AppLayout>
+              <ProjectMembers />
             </AppLayout>
           </ProtectedRoute>
         }
