@@ -1,16 +1,38 @@
-# React + Vite
+# Task Manager Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite client for the Task Manager app. Provides authentication, project/task views, comments, file upload, and integrates with the backend API.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node.js 18+
 
-## React Compiler
+## Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+cd frontend
+npm install
+```
 
-## Expanding the ESLint configuration
+Create `.env`:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```env
+VITE_API_URL=http://localhost:5000/api/v1
+```
+
+## Run
+
+```bash
+npm run dev
+# opens on http://localhost:5173
+```
+
+## Build
+
+```bash
+npm run build
+```
+
+## Notes
+
+- Auth tokens are handled via cookies/headers; ensure backend CORS `ALLOWED_ORIGINS` includes your frontend origin.
+- The backend exposes `X-Cache` headers when Redis serves cached responses.

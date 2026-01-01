@@ -1,112 +1,94 @@
-# Task Manager
+<div align="center">
+	<h1>Task Manager</h1>
+	<p>Full‑stack task management with projects, roles, comments, files, real‑time updates, and Redis caching.</p>
+</div>
 
-A full-stack web application for managing tasks, designed to help teams organize workflows and track progress. This application features a React frontend for an interactive user interface and a Node.js/Express backend connected to a MySQL database.
+## Overview
 
-## 🚀 Features
+- Backend: Node.js/Express, MySQL, JWT auth with refresh tokens, role-based access, Socket.IO events, Redis cache, rate limiting, file uploads (multer), migrations auto-run on boot.
+- Frontend: React + Vite, Axios API client, Auth and Chat providers, Tailwind pipeline.
 
-* **Task Management:** Create, read, update, and delete tasks efficiently.
-* **Team Collaboration:** Assign members to specific tasks.
-* **Kanban/List View:** Organize tasks visually (inferred from project structure).
-* **RESTful API:** Robust backend API handling data operations.
-* **Responsive Design:** User-friendly interface built with React.
+## Features
 
-## 🛠️ Tech Stack
+- Projects and membership roles (manager, project_manager, member)
+- Tasks with history, status transitions, assignments, and per-project listings
+- Comments on tasks with realtime events
+- File uploads scoped to projects/tasks
+- JWT auth (access + refresh) with cookie support
+- Redis caching for hot reads (`X-Cache: HIT|MISS` headers)
+- Rate limiting on auth endpoints (configurable/disableable)
+- CORS allowlist and secure cookie settings
+- Health checks (`/` and `/health/redis`)
 
-### Backend
+## Prerequisites
 
-* **Runtime:** Node.js
-* **Framework:** Express.js
-* **Database:** MySQL (using `mysql2` driver)
-* **Environment Management:** Dotenv
-* **CORS:** Cross-Origin Resource Sharing enabled
+- Node.js 18+
+- MySQL 8+ (or compatible)
+- Redis 7+ (local Docker or hosted)
 
-### Frontend
-
-* **Framework:** React
-* **HTTP Client:** Axios
-* **Icons:** React Icons
-* **Styling:** CSS
-
-## 📂 Getting Started
-
-### Prerequisites
-
-* [Node.js](https://nodejs.org/) installed
-* [MySQL](https://www.mysql.com/) installed and running locally or via a cloud provider.
-
-### 1. Clone the Repository
+## Quickstart
 
 ```bash
-git clone https://github.com/your-username/taskmanger.git
-cd taskmanger
-
-```
-
-### 2. Backend Setup
-
-Navigate to the backend directory and install dependencies:
-
-```bash
-cd backend
+git clone https://github.com/VanshGolakiya-2910/Taskmanger.git
+cd Taskmanger/backend
 npm install
+cp .env.sample .env   # fill secrets and DB creds
+npm run dev           # runs migrations, starts API
 
-```
-
-**Database Configuration:**
-
-1. Create a MySQL database for the project.
-2. Create a `.env` file in the `backend` root.
-3. Add your database credentials (example configuration):
-
-```env
-PORT=5000
-DB_HOST=localhost
-DB_USER=your_mysql_user
-DB_PASSWORD=your_mysql_password
-DB_NAME=your_database_name
-
-```
-
-Start the backend server:
-
-```bash
-npm start
-
-```
-
-*The server typically runs on http://localhost:5000*
-
-### 3. Frontend Setup
-
-Navigate to the frontend directory and install dependencies:
-
-```bash
+# in another terminal
 cd ../frontend
 npm install
-
+cp .env.sample .env
+npm run dev           # opens http://localhost:5173
 ```
 
-Start the React development server:
+## Environment configuration
 
-```bash
-npm start
+- Backend sample: [backend/.env.sample](backend/.env.sample)
+- Frontend sample: [frontend/.env.sample](frontend/.env.sample)
 
-```
+Key backend variables:
+- `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
+- `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` (32+ chars)
+- `ALLOWED_ORIGINS` (comma-separated)
+- `REDIS_URL`
+- `AUTH_RATE_LIMIT_MAX`, `AUTH_RATE_LIMIT_DISABLE`
+- `PORT`, `NODE_ENV`
 
-*The application will open in your browser at http://localhost:3000*
+Key frontend variable:
+- `VITE_API_URL` (e.g., http://localhost:5000/api/v1)
 
-## 📜 Scripts
+## Caching
 
-**Backend**
+- Cached: user profile, user lists, project list, project members/details, task lists, task-by-id, task comments.
+- Invalidation on writes: task create/update/delete/status change, comment create, project membership changes, user changes.
+- Inspect with `X-Cache` header or `redis-cli monitor`.
 
-* `npm start`: Starts the server using `node server.js`.
-* `npm run dev`: Starts the server in development mode using `nodemon`.
+## Health and observability
 
-**Frontend**
+- Liveness: `/`
+- Redis: `/health/redis`
+- Cache visibility: `X-Cache: HIT|MISS` on cached endpoints
 
-* `npm start`: Runs the app in development mode.
-* `npm run build`: Builds the app for production.
+## Scripts
 
-## 📄 License
+- Backend: `npm run dev` (nodemon), `npm start` (prod)
+- Frontend: `npm run dev`, `npm run build`
 
-This project is licensed under the MIT License.
+## Operational notes
+
+- Rate limiting: disabled in development; enable/tune via env for production.
+- CORS: set `ALLOWED_ORIGINS` to your deployed frontend domains.
+- Cookies: `httpOnly`, `sameSite=lax`, `secure` in production.
+- Migrations: auto-run on server start.
+- File uploads: stored under `uploads/`; ensure writable volume in production.
+
+## Troubleshooting
+
+- Redis connection refused: start Redis or point `REDIS_URL` to a reachable host.
+- 429 on auth: increase `AUTH_RATE_LIMIT_MAX` or set `AUTH_RATE_LIMIT_DISABLE=true` in dev.
+- CORS blocked: configure `ALLOWED_ORIGINS`.
+
+## License
+
+MIT
