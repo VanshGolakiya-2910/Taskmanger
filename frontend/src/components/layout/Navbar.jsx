@@ -4,7 +4,11 @@ import { useAuth } from '../../hooks/useAuth'
 export default function Navbar({ onToggleTheme, isDark }) {
   const { user, logout } = useAuth()
 
-  const initials = (user?.email || user?.name || 'U')
+  const displayName = user?.name || user?.email || 'User'
+  const initials = displayName
+    .split(' ')
+    .map(word => word[0])
+    .join('')
     .slice(0, 2)
     .toUpperCase()
 
@@ -18,7 +22,7 @@ export default function Navbar({ onToggleTheme, isDark }) {
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex flex-col text-right">
             <span className="text-sm font-medium text-slate-900 dark:text-white">
-              {user?.email || 'User'}
+              {displayName}
             </span>
             <span className="text-xs text-slate-500">{user?.role ? user.role.replace('_', ' ') : 'Member'}</span>
           </div>

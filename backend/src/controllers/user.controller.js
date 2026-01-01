@@ -34,10 +34,11 @@ export const createUser = asyncHandler(async (req, res) => {
 });
 
 export const updateProfile = asyncHandler(async (req, res) => {
-  const { email, currentPassword, newPassword } = req.body;
+  const { email, name, currentPassword, newPassword } = req.body;
 
   const updatedUser = await updateUserProfileService(req.user.id, {
     email,
+    name,
     currentPassword,
     newPassword
   });

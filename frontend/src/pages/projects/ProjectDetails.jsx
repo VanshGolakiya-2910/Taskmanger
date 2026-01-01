@@ -43,10 +43,11 @@ function SectionHeader({ title, action }) {
 }
 
 function MemberRow({ member, canManage, onRemove }) {
+  const displayName = member.name || member.email
   return (
     <Card className="p-4 flex items-center justify-between">
       <div>
-        <p className="font-medium text-slate-900 dark:text-white">{member.email}</p>
+        <p className="font-medium text-slate-900 dark:text-white">{displayName}</p>
         <p className="text-xs text-slate-500">
           Workspace: {member.global_role} · Project: {member.project_role}
         </p>
@@ -285,7 +286,7 @@ export default function ProjectDetails() {
       <Modal open={Boolean(removeTarget)} onClose={() => setRemoveTarget(null)}>
         <h2 className="text-lg font-semibold mb-3">Remove member</h2>
         <p className="text-sm text-slate-600 mb-6">
-          Remove {removeTarget?.email} from this project?
+          Remove {removeTarget?.name || removeTarget?.email} from this project?
         </p>
         <div className="flex justify-end gap-3">
           <Button variant="ghost" onClick={() => setRemoveTarget(null)}>

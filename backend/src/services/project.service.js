@@ -168,6 +168,7 @@ export const getProjectMembersService = async (projectId) => {
     SELECT
       u.id,
       u.email,
+      u.name,
       u.role AS global_role,
       pm.project_role,
       pm.joined_at
@@ -206,6 +207,7 @@ export const getProjectDetailsService = async (projectId) => {
     SELECT
       u.id,
       u.email,
+      u.name,
       u.role AS global_role,
       pm.project_role,
       pm.joined_at

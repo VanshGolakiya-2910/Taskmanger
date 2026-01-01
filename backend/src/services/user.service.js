@@ -8,6 +8,7 @@ export const getCurrentUserService = async (userId) => {
     SELECT
       id,
       email,
+      name,
       role,
       created_at
     FROM users
@@ -34,6 +35,7 @@ export const getAllUsersService = async (requestingUser) => {
     SELECT
       id,
       email,
+      name,
       role,
       created_at
     FROM users
@@ -86,7 +88,7 @@ export const createUserByManagerService = async (managerUser, { email, role }) =
    UPDATE USER PROFILE
    ====================== */
 
-export const updateUserProfileService = async (userId, { email, currentPassword, newPassword }) => {
+export const updateUserProfileService = async (userId, { email, name, currentPassword, newPassword }) => {
   const [[user]] = await pool.query(
     "SELECT id, password_hash FROM users WHERE id = ?",
     [userId]
@@ -134,8 +136,16 @@ export const updateUserProfileService = async (userId, { email, currentPassword,
     );
   }
 
+  // Update name if provided
+  if (name !== undefined) {
+    await pool.query(
+      "UPDATE users SET name = ? WHERE id = ?",
+      [name || null, userId]
+    );
+  }
+
   const [[updatedUser]] = await pool.query(
-    "SELECT id, email, role, created_at FROM users WHERE id = ?",
+    "SELECT id, email, name, role, created_at FROM users WHERE id = ?",
     [userId]
   );
 

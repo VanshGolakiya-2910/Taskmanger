@@ -254,7 +254,7 @@ export default function CreateTask() {
                   )}
                   {members.map((member) => (
                     <option key={member.id} value={member.id}>
-                      {member.email} ({member.role})
+                      {member.name || member.email} ({member.role})
                     </option>
                   ))}
                 </SelectInput>

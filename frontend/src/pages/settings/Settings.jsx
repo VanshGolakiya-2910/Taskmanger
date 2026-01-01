@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Lock, Mail, Eye, EyeOff } from 'lucide-react'
+import { Lock, Mail, Eye, EyeOff, User } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import { updateProfileApi } from '../../api/auth.api'
@@ -10,6 +10,7 @@ export default function Settings() {
   const [loading, setLoading] = useState(false)
   const [showPasswords, setShowPasswords] = useState({ current: false, new: false })
 
+  const [name, setName] = useState(user?.name || '')
   const [email, setEmail] = useState(user?.email || '')
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -41,6 +42,9 @@ export default function Settings() {
 
       // Prepare payload
       const payload = {}
+      if (name !== user?.name) {
+        payload.name = name
+      }
       if (email !== user?.email) {
         payload.email = email
       }
@@ -79,6 +83,26 @@ export default function Settings() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name Section */}
+          <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+              <User className="w-5 h-5" />
+              Display Name
+            </h2>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Name</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 focus:outline-none transition"
+                placeholder="Your display name"
+              />
+              <p className="text-xs text-slate-500">This name will be displayed across the application instead of your email.</p>
+            </div>
+          </div>
+
           {/* Email Section */}
           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm">
             <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
