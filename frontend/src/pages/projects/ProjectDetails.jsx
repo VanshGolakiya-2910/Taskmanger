@@ -18,13 +18,14 @@ import { useToast } from '../../hooks/useToast'
 import { useChat } from '../../hooks/useChat'
 import ChatPanel from '../../components/chat/ChatPanel'
 import AddMemberModal from './components/AddMemberModal'
+import TaskListByDueDate from './components/TaskListByDueDate'
 import FileManager from '../../components/files/FileManager'
 import { usePageTitle } from '../../hooks/usePageTitle'
 
 // eslint-disable-next-line no-unused-vars
 function StatPill({ icon: IconComponent, label, value }) {
   return (
-    <Card className="p-4 flex items-center gap-3">
+    <Card className="p-4 flex items-center gap-3 hover:shadow-lg transition-all duration-200">
       <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center">
         <IconComponent className="w-5 h-5" />
       </div>
@@ -48,7 +49,7 @@ function SectionHeader({ title, action }) {
 function MemberRow({ member, canManage, onRemove }) {
   const displayName = member.name || member.email
   return (
-    <div className="group flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+    <div className="group flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 hover:scale-[1.02] transition-all duration-200 cursor-pointer">
       <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-semibold">
         {displayName.slice(0, 1).toUpperCase()}
       </div>
@@ -81,7 +82,7 @@ function TaskStatusGrid({ tasks }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
       {TASK_STATUSES.map((status) => (
-        <Card key={status.key} className="p-4 flex items-center justify-between">
+        <Card key={status.key} className="p-4 flex items-center justify-between hover:scale-105 hover:shadow-md hover:border-blue-500 transition-all duration-200 cursor-pointer">
           <div>
             <p className="text-xs uppercase text-slate-500">{status.label}</p>
             <p className="text-lg font-semibold text-slate-900 dark:text-white">
@@ -118,21 +119,6 @@ export default function ProjectDetails() {
 
   const canManage = canManageProjectMembers(user)
   const canCreate = canCreateTask(user)
-
-  const tasksByDueDate = useMemo(() => {
-    return tasks
-      .slice()
-      .sort((a, b) => {
-        const aDate = a.due_date || a.dueDate
-        const bDate = b.due_date || b.dueDate
-
-        if (!aDate && !bDate) return 0
-        if (!aDate) return 1
-        if (!bDate) return -1
-
-        return new Date(aDate) - new Date(bDate)
-      })
-  }, [tasks])
 
   const loadDetails = async () => {
     setLoading(true)
@@ -193,8 +179,8 @@ export default function ProjectDetails() {
   return (
     <PageContainer>
       <div className="flex flex-col gap-8">
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div>
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between animate-fade-in">
+          <div className="transition-all duration-300">
             <p className="text-sm text-slate-500">Project</p>
             <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">
               {project.name}
@@ -205,7 +191,7 @@ export default function ProjectDetails() {
           <div className="flex gap-3 flex-wrap">
             <Button
               variant="secondary"
-              className="gap-2"
+              className="gap-2 hover:scale-105 transition-transform duration-200"
               onClick={() => setChatOpen(!chatOpen)}
             >
               <MessageCircle className="w-4 h-4" />
@@ -214,7 +200,7 @@ export default function ProjectDetails() {
 
             <Button
               variant="secondary"
-              className="gap-2"
+              className="gap-2 hover:scale-105 transition-transform duration-200"
               onClick={() => navigate(`/projects/${projectId}/tasks`)}
             >
               <Kanban className="w-4 h-4" />
@@ -223,7 +209,7 @@ export default function ProjectDetails() {
 
             {canCreate && (
               <Button
-                className="gap-2"
+                className="gap-2 hover:scale-105 transition-transform duration-200"
                 onClick={() => navigate('/tasks/new', { state: { projectId } })}
               >
                 <Plus className="w-4 h-4" />
@@ -234,29 +220,33 @@ export default function ProjectDetails() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <StatPill icon={Folder} label="Project ID" value={`#${project.id}`} />
+          <div className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+            <StatPill icon={Folder} label="Project ID" value={`#${project.id}`} />
+          </div>
           <button 
             onClick={() => navigate(`/projects/${projectId}/members`)}
-            className="text-left hover:scale-105 transition-transform"
+            className="text-left hover:scale-105 transition-all duration-200 animate-fade-in"
+            style={{ animationDelay: '200ms' }}
           >
             <StatPill icon={Users} label="Members" value={members.length} />
           </button>
           <button 
             onClick={() => navigate(`/projects/${projectId}/tasks`)}
-            className="text-left hover:scale-105 transition-transform"
+            className="text-left hover:scale-105 transition-all duration-200 animate-fade-in"
+            style={{ animationDelay: '300ms' }}
           >
             <StatPill icon={ListTodo} label="Tasks" value={tasks.length} />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2 p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in" style={{ animationDelay: '400ms' }}>
+          <Card className="lg:col-span-2 p-6 transition-all duration-200 hover:shadow-lg">
             <SectionHeader
               title="Tasks overview"
               action={
                 <Button
                   variant="secondary"
-                  className="gap-2"
+                  className="gap-2 hover:scale-105 transition-transform duration-200 cursor-pointer"
                   onClick={() => navigate(`/projects/${projectId}/tasks`)}
                 >
                   <ArrowUpRight className="w-4 h-4" />
@@ -273,62 +263,18 @@ export default function ProjectDetails() {
               <div className="space-y-5">
                 <TaskStatusGrid tasks={tasks} />
 
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-base font-semibold text-slate-900 dark:text-white">
-                      Tasks by due date
-                    </h3>
-                    <p className="text-xs text-slate-500">Soonest first</p>
-                  </div>
-
-                  <div className="space-y-2 max-h-72 overflow-y-auto pr-1 scroll-area">
-                    {tasksByDueDate.map((task) => {
-                      const statusMeta = TASK_STATUSES.find((s) => s.key === task.status) || {
-                        label: task.status || 'Unknown',
-                        color: 'slate',
-                      }
-
-                      const rawDue = task.due_date || task.dueDate
-                      const formattedDue = rawDue
-                        ? new Date(rawDue).toLocaleString(undefined, {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          })
-                        : 'No due date'
-
-                      return (
-                        <div
-                          key={task.id}
-                          className="flex items-center justify-between gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-                        >
-                          <div className="min-w-0">
-                            <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
-                              {task.title}
-                            </p>
-                            <p className="text-xs text-slate-500">Due {formattedDue}</p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
-                            <button
-                              onClick={() => navigate(`/projects/${projectId}/tasks/${task.id}`)}
-                              aria-label={`Open task ${task.title}`}
-                              className="p-2 rounded-full text-slate-500 hover:text-white hover:bg-white/10 transition"
-                            >
-                              <ArrowUpRight className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
+                <TaskListByDueDate 
+                  tasks={tasks}
+                  projectId={projectId}
+                  navigate={navigate}
+                  excludeStatuses={['backlog']}
+                  itemsPerPage={5}
+                />
               </div>
             )}
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 transition-all duration-200 hover:shadow-lg">
             <SectionHeader
               title="Members"
               action={
