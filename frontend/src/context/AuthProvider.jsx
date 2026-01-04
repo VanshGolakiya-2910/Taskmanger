@@ -32,7 +32,9 @@ export function AuthProvider({ children }) {
         // Then fetch user data
         const me = await getMeApi()
         setUser(me.data.data)
-      } catch {
+      } catch (error) {
+        // If refresh fails, just set user to null and let them log in
+        setAccessToken(null)
         setUser(null)
       } finally {
         setLoading(false)
