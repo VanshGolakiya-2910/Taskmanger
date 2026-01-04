@@ -2,6 +2,7 @@ export default function Button({
   children,
   variant = 'primary',
   className = '',
+  as: Component = 'button',
   ...props
 }) {
   const variants = {
@@ -31,7 +32,7 @@ export default function Button({
   const variantStyle = variants[variant]
 
   return (
-    <button
+    <Component
       style={{
         backgroundColor: variantStyle.bg,
         color: variantStyle.text,
@@ -56,6 +57,6 @@ export default function Button({
       {...props}
     >
       {children}
-    </button>
+    </Component>
   )
 }

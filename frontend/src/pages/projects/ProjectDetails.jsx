@@ -18,7 +18,7 @@ import { useToast } from '../../hooks/useToast'
 import { useChat } from '../../hooks/useChat'
 import ChatPanel from '../../components/chat/ChatPanel'
 import AddMemberModal from './components/AddMemberModal'
-import FileUpload from './components/FileUpload'
+import FileManager from '../../components/files/FileManager'
 
 // eslint-disable-next-line no-unused-vars
 function StatPill({ icon: IconComponent, label, value }) {
@@ -110,6 +110,7 @@ export default function ProjectDetails() {
 
   const [openAdd, setOpenAdd] = useState(false)
   const [removeTarget, setRemoveTarget] = useState(null)
+  const [fileRefresh, setFileRefresh] = useState(0)
 
   const canManage = canManageProjectMembers(user)
   const canCreate = canCreateTask(user)
@@ -308,17 +309,13 @@ export default function ProjectDetails() {
         <Card className="p-6">
           <SectionHeader
             title="Files"
-            action={<span className="text-xs text-slate-500">Upload project files</span>}
+            action={<span className="text-xs text-slate-500">Project attachments</span>}
           />
-          <div className="flex items-center justify-between flex-wrap gap-3">
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              Upload supporting documents for this project.
-            </p>
-            <FileUpload projectId={projectId} onUploaded={loadDetails} />
-          </div>
-          <p className="text-xs text-slate-500 mt-3">
-            Uploaded files will appear in the shared project space (listing not yet available).
-          </p>
+          <FileManager 
+            projectId={projectId} 
+            refresh={fileRefresh}
+            onFileChange={() => setFileRefresh(prev => prev + 1)}
+          />
         </Card>
       </div>
 

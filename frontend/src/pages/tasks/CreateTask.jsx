@@ -129,6 +129,25 @@ export default function CreateTask() {
       return
     }
 
+    // Validate and convert date format from DD/MM/YYYY to YYYY-MM-DD
+    let formattedDueDate = undefined
+    if (form.dueDate && form.dueDate.trim()) {
+      const dateMatch = form.dueDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/)
+      if (!dateMatch) {
+        showToast('Please use DD/MM/YYYY format for the due date.', 'error')
+        return
+      }
+      const [, day, month, year] = dateMatch
+      formattedDueDate = `${year}-${month}-${day}`
+      
+      // Validate it's a real date
+      const testDate = new Date(formattedDueDate)
+      if (isNaN(testDate.getTime())) {
+        showToast('Please enter a valid date.', 'error')
+        return
+      }
+    }
+
     setSubmitting(true)
     try {
       const assigneeId = Number(form.assignedTo) || form.assignedTo
@@ -137,7 +156,7 @@ export default function CreateTask() {
         description: form.description.trim(),
         status: form.status,
         assignedTo: assigneeId,
-        dueDate: form.dueDate || undefined,
+        dueDate: formattedDueDate,
       })
 
       showToast('Task created successfully')
@@ -251,11 +270,13 @@ export default function CreateTask() {
                 />
               </FormField>
 
-              <FormField label="Due date" hint="Optional">
+              <FormField label="Due date" hint="Optional (format: DD/MM/YYYY)">
                 <Input
-                  type="date"
+                  type="text"
+                  placeholder="DD/MM/YYYY"
                   value={form.dueDate}
                   onChange={(e) => handleChange('dueDate', e.target.value)}
+                  pattern="\d{2}/\d{2}/\d{4}"
                 />
               </FormField>
 

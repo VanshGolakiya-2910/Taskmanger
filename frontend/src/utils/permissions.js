@@ -43,6 +43,12 @@ export const canCreateTask = (user) => {
   return isPrivileged(user);
 };
 
+// Can create project
+export const canCreateProject = (user) => {
+  if (!user) return false;
+  return isPrivileged(user);
+};
+
 /**
  * PROJECT PERMISSIONS
  */

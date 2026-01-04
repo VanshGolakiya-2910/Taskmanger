@@ -99,3 +99,74 @@ export const deleteFileService = async ({ user, fileId }) => {
     fileId,
   });
 };
+
+/**
+ * Get file for download
+ */
+export const getFileService = async ({ fileId }) => {
+  const [[file]] = await pool.query(
+    `
+    SELECT id, filename, filepath, project_id
+    FROM files
+    WHERE id = ?
+    `,
+    [fileId]
+  );
+
+  if (!file) {
+    throw new ApiError(404, "File not found");
+  }
+
+  return file;
+};
+
+/**
+ * Get all files for a project
+ */
+export const getProjectFilesService = async ({ projectId }) => {
+  const [files] = await pool.query(
+    `
+    SELECT 
+      f.id,
+      f.filename,
+      f.filepath,
+      f.uploaded_at,
+      f.uploaded_by,
+      f.task_id,
+      u.name AS uploader_name,
+      u.email AS uploader_email
+    FROM files f
+    LEFT JOIN users u ON u.id = f.uploaded_by
+    WHERE f.project_id = ?
+    ORDER BY f.uploaded_at DESC
+    `,
+    [projectId]
+  );
+
+  return files;
+};
+
+/**
+ * Get all files for a specific task
+ */
+export const getTaskFilesService = async ({ projectId, taskId }) => {
+  const [files] = await pool.query(
+    `
+    SELECT 
+      f.id,
+      f.filename,
+      f.filepath,
+      f.uploaded_at,
+      f.uploaded_by,
+      u.name AS uploader_name,
+      u.email AS uploader_email
+    FROM files f
+    LEFT JOIN users u ON u.id = f.uploaded_by
+    WHERE f.project_id = ? AND f.task_id = ?
+    ORDER BY f.uploaded_at DESC
+    `,
+    [projectId, taskId]
+  );
+
+  return files;
+};

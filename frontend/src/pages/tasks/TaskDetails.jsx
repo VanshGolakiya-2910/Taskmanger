@@ -20,6 +20,7 @@ import {
 } from '../../utils/permissions'
 import StatusPicker from './Components/StatusPicker'
 import CommentsPanel from './Components/CommentsPanel'
+import FileManager from '../../components/files/FileManager'
 
 function InfoRow({ label, value }) {
   return (
@@ -50,13 +51,14 @@ export default function TaskDetails() {
     const date = new Date(raw)
     if (Number.isNaN(date.getTime())) return 'Not set'
 
-    return date.toLocaleString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
+    // Format as DD/MM/YYYY HH:MM
+    const day = String(date.getDate()).padStart(2, '0')
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const year = date.getFullYear()
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`
   }, [task])
 
   const statusMeta = useMemo(() => {
@@ -180,24 +182,21 @@ export default function TaskDetails() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2 p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Overview</h2>
-              {allowedUpdate && (
-                <span className="text-xs text-slate-500">
-                  Update status below
-                </span>
-              )}
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">Description</h2>
+              <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-line">
+                {task.description || 'No description provided.'}
+              </p>
             </div>
 
-            <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-line">
-              {task.description || 'No description provided.'}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <InfoRow label="Project" value={`#${projectId}`} />
-              <InfoRow label="Assigned To" value={task.assigned_to || task.assignedTo} />
-              <InfoRow label="Due Date" value={prettyDueDate} />
-              <InfoRow label="Status" value={statusMeta.label} />
+            <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
+              <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-3">Details</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <InfoRow label="Project" value={`#${projectId}`} />
+                <InfoRow label="Assigned To" value={task.assigned_to || task.assignedTo} />
+                <InfoRow label="Due Date" value={prettyDueDate} />
+                <InfoRow label="Status" value={statusMeta.label} />
+              </div>
             </div>
 
             {allowedUpdate && (
@@ -213,6 +212,15 @@ export default function TaskDetails() {
           <Card className="p-6">
             <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">Comments</h2>
             <CommentsPanel projectId={projectId} taskId={taskId} />
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-3">Files</h2>
+            <FileManager 
+              projectId={projectId} 
+              taskId={taskId} 
+              compact
+            />
           </Card>
         </div>
       </div>

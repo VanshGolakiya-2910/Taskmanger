@@ -133,7 +133,10 @@ export const getAllProjectTasksService = async (user, project) => {
     SELECT *
     FROM tasks
     WHERE project_id = ?
-    ORDER BY created_at DESC
+    ORDER BY 
+      CASE WHEN due_date IS NULL THEN 1 ELSE 0 END,
+      due_date ASC,
+      created_at DESC
     `,
     [project.id]
   );
@@ -148,7 +151,10 @@ export const getMyAssignedTasksService = async (user, project) => {
     FROM tasks
     WHERE project_id = ?
       AND assigned_to = ?
-    ORDER BY created_at DESC
+    ORDER BY 
+      CASE WHEN due_date IS NULL THEN 1 ELSE 0 END,
+      due_date ASC,
+      created_at DESC
     `,
     [project.id, user.id]
   );

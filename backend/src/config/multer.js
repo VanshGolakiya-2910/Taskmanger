@@ -26,7 +26,16 @@ const allowedMimeTypes = [
   "image/jpeg",
   "image/png",
   "image/webp",
+  "image/gif",
   "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/plain",
+  "text/csv",
+  "application/zip",
+  "application/x-zip-compressed",
 ];
 
 export const upload = multer({

@@ -103,7 +103,12 @@ export const loginUser = async ({ email, password }) => {
    ====================== */
 
 export const refreshAccessToken = async (req) => {
-  const refreshToken = req.cookies?.refreshToken;
+  // Accept refresh token from cookie (primary) with fallbacks for tools like Postman
+  const refreshToken =
+    req.cookies?.refreshToken ||
+    req.body?.refreshToken ||
+    req.headers["x-refresh-token"] ||
+    req.headers["authorization"]?.replace(/Bearer\s+/i, "");
 
   if (!refreshToken) {
     throw new ApiError(401, "REFRESH_TOKEN_MISSING");
