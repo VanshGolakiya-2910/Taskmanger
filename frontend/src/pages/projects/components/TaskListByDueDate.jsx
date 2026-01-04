@@ -8,7 +8,7 @@ export default function TaskListByDueDate({
   tasks, 
   projectId, 
   navigate,
-  excludeStatuses = ['backlog'],
+  excludeStatuses = [],
   itemsPerPage = 5
 }) {
   const [showAll, setShowAll] = useState(false)
@@ -43,7 +43,10 @@ export default function TaskListByDueDate({
       </div>
 
       <div className={`space-y-2 ${showAll ? 'max-h-96 overflow-y-auto pr-1 scroll-area' : ''}`}>
-        {visibleTasks.map((task) => {
+        {visibleTasks.length === 0 ? (
+          <p className="text-sm text-slate-500 py-4 text-center">No tasks to display</p>
+        ) : (
+          visibleTasks.map((task) => {
           const statusMeta = TASK_STATUSES.find((s) => s.key === task.status) || {
             label: task.status || 'Unknown',
             color: 'slate',
@@ -83,7 +86,8 @@ export default function TaskListByDueDate({
               </div>
             </div>
           )
-        })}
+          })
+        )}
       </div>
 
       {hasMoreTasks && (

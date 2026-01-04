@@ -267,7 +267,7 @@ export default function ProjectDetails() {
                   tasks={tasks}
                   projectId={projectId}
                   navigate={navigate}
-                  excludeStatuses={['backlog']}
+                  excludeStatuses={[]}
                   itemsPerPage={5}
                 />
               </div>
