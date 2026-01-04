@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { useTheme } from '../../context/ThemeContext'
@@ -17,6 +17,7 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   
   const submit = async (e) => {
     e.preventDefault()
@@ -115,20 +116,30 @@ export default function Login() {
                   Forgot password?
                 </Link>
               </div>
-              <input
-                type="password"
-                className="w-full rounded-lg border px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-700"
-                style={{
-                  backgroundColor: 'var(--input-bg)',
-                  borderColor: 'var(--input-border)',
-                  color: 'var(--text-primary)'
-                }}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                required
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  className="w-full rounded-lg border px-4 py-3 pr-12 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-700"
+                  style={{
+                    backgroundColor: 'var(--input-bg)',
+                    borderColor: 'var(--input-border)',
+                    color: 'var(--text-primary)'
+                  }}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  required
+                  value={form.password}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+                  title={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
 
             <Button
