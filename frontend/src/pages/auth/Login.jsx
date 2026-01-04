@@ -90,7 +90,12 @@ export default function Login() {
             <div className="space-y-2">
               <label className="text-sm text-slate-700 dark:text-slate-200">Email</label>
               <input
-                className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-700"
+                className="w-full rounded-lg border px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-700"
+                style={{
+                  backgroundColor: 'var(--input-bg)',
+                  borderColor: 'var(--input-border)',
+                  color: 'var(--text-primary)'
+                }}
                 placeholder="you@example.com"
                 type="email"
                 autoComplete="email"
@@ -112,7 +117,12 @@ export default function Login() {
               </div>
               <input
                 type="password"
-                className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-700"
+                className="w-full rounded-lg border px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-700"
+                style={{
+                  backgroundColor: 'var(--input-bg)',
+                  borderColor: 'var(--input-border)',
+                  color: 'var(--text-primary)'
+                }}
                 placeholder="••••••••"
                 autoComplete="current-password"
                 required

@@ -125,7 +125,12 @@ export default function ForgotPassword() {
               </label>
               <input
                 type="email"
-                className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-700"
+                className="w-full rounded-lg border px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-700"
+                style={{
+                  backgroundColor: 'var(--input-bg)',
+                  borderColor: 'var(--input-border)',
+                  color: 'var(--text-primary)'
+                }}
                 placeholder="you@example.com"
                 required
                 value={email}
