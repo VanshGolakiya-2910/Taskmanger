@@ -16,7 +16,7 @@ import { usePageTitle } from '../../hooks/usePageTitle'
 // eslint-disable-next-line no-unused-vars
 function StatCard({ title, value, icon: IconComponent, accent }) {
   return (
-    <Card className="p-4 flex items-center gap-3">
+    <Card className="p-4 flex items-center gap-3 hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-pointer">
       <div
         className={`w-10 h-10 rounded-lg flex items-center justify-center ${accent}`}
       >
@@ -182,7 +182,7 @@ export default function Dashboard() {
           <div className="flex gap-3">
             {canCreateTask(user) && (
               <Button
-                className="gap-2"
+                className="gap-2 hover:scale-105 transition-transform duration-200"
                 onClick={() => navigate('/tasks/new')}
               >
                 <Plus className="w-4 h-4" />
@@ -190,7 +190,10 @@ export default function Dashboard() {
               </Button>
             )}
 
-            <Button onClick={() => navigate('/projects')}>
+            <Button 
+              onClick={() => navigate('/projects')}
+              className="hover:scale-105 transition-transform duration-200"
+            >
               View Projects
             </Button>
 
@@ -198,6 +201,7 @@ export default function Dashboard() {
               <Button
                 variant="secondary"
                 onClick={() => navigate(`/projects/${projects[0].id}`)}
+                className="hover:scale-105 transition-transform duration-200"
               >
                 Open Latest Project
               </Button>
@@ -248,7 +252,7 @@ export default function Dashboard() {
               {TASK_STATUSES.map((status) => (
                 <div
                   key={status.key}
-                  className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3"
+                  className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:scale-105 hover:shadow-md hover:border-blue-500 transition-all duration-200 cursor-pointer"
                 >
                   <div>
                     <p className="text-sm text-slate-500">{status.label}</p>
@@ -286,7 +290,7 @@ export default function Dashboard() {
                     return (
                       <div
                         key={`${task.id}-${taskProjectId}`}
-                        className="flex items-center justify-between gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                        className="flex items-center justify-between gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 cursor-pointer hover:bg-slate-100 transition-colors"
                         onDoubleClick={() => navigate(`/projects/${taskProjectId}/tasks/${task.id}`)}
                       >
                         <div className="min-w-0 flex-1">
@@ -319,7 +323,7 @@ export default function Dashboard() {
                   <div className="mt-3 flex justify-center">
                     <Button
                       variant="secondary"
-                      className="gap-2"
+                      className="gap-2 hover:scale-105 transition-transform duration-200"
                       onClick={() => setShowAllTasks(!showAllTasks)}
                     >
                       {showAllTasks ? (
@@ -351,7 +355,7 @@ export default function Dashboard() {
             <div className="space-y-3">
               <Link
                 to="/projects"
-                className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 hover:scale-[1.02] hover:shadow-md transition-all duration-200"
               >
                 <div>
                   <p className="font-medium text-slate-900 dark:text-white">Projects</p>
@@ -364,7 +368,7 @@ export default function Dashboard() {
                 <button
                   type="button"
                   onClick={() => navigate(`/projects/${projects[0].id}`)}
-                  className="w-full text-left rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                  className="w-full text-left rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 hover:scale-[1.02] hover:shadow-md transition-all duration-200 cursor-pointer"
                   style={{ cursor: 'pointer' }}
                 >
                   <p className="font-medium text-slate-900 dark:text-white">Latest project</p>
@@ -376,7 +380,7 @@ export default function Dashboard() {
 
               <Link
                 to={projects[0] ? `/projects/${projects[0].id}` : '/projects'}
-                className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 hover:scale-[1.02] hover:shadow-md transition-all duration-200"
               >
                 <div>
                   <p className="font-medium text-slate-900 dark:text-white">Latest project</p>
@@ -416,7 +420,7 @@ export default function Dashboard() {
                       key={project.id}
                       type="button"
                       onClick={() => navigate(`/projects/${project.id}`)}
-                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 text-left hover:bg-slate-50 dark:hover:bg-slate-800 hover:scale-[1.02] hover:shadow-md hover:border-blue-500 transition-all duration-200 cursor-pointer"
                       style={{ cursor: 'pointer' }}
                     >
                       <div className="flex items-center justify-between">

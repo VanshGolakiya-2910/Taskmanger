@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Folder, Users, ListTodo, ArrowUpRight } from 'lucide-react'
 import { createProjectApi, getMyProjectsApi } from '../../api/project.api'
 import PageContainer from '../../components/layout/PageContainer'
 import Card from '../../components/ui/Card'
@@ -121,19 +122,43 @@ export default function ProjectList() {
                 }
               }}
               className="
+                group
                 p-6
                 cursor-pointer
                 focus:outline-none
-                focus:ring-2 focus:ring-slate-900/10
+                focus:ring-2 focus:ring-blue-500/50
+                hover:shadow-lg
+                hover:scale-[1.02]
+                hover:border-blue-500
+                transition-all
+                duration-200
               "
             >
-              <h2 className="text-lg font-medium text-slate-900 dark:text-white">
+              <div className="flex items-start justify-between mb-4">
+                <div className="w-12 h-12 rounded-lg bg-slate-900 dark:bg-slate-800 flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-200">
+                  <Folder className="w-6 h-6 text-white" />
+                </div>
+                <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
+              </div>
+
+              <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
                 {project.name}
               </h2>
 
-              <p className="mt-1 text-sm text-slate-500">
-                Project ID: {project.id}
+              <p className="text-sm text-slate-500 mb-4">
+                ID: #{project.id}
               </p>
+
+              <div className="flex items-center gap-4 pt-3 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <Users className="w-4 h-4" />
+                  <span>Team</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <ListTodo className="w-4 h-4" />
+                  <span>Tasks</span>
+                </div>
+              </div>
             </Card>
           ))}
         </div>
