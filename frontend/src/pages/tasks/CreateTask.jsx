@@ -13,12 +13,15 @@ import { getMyProjectsApi, getProjectMembersApi } from '../../api/project.api'
 import { createTaskApi } from '../../api/task.api'
 import { TASK_STATUSES } from '../../utils/constant'
 import { canCreateTask } from '../../utils/permissions'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export default function CreateTask() {
   const navigate = useNavigate()
   const location = useLocation()
   const { user } = useAuth()
   const { showToast } = useToast()
+
+  usePageTitle('Create Task')
 
   const [projects, setProjects] = useState([])
   const [members, setMembers] = useState([])

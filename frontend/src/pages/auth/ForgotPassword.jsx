@@ -4,8 +4,10 @@ import { Mail, ArrowLeft, CheckCircle, Copy } from 'lucide-react'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import { forgotPasswordApi } from '../../api/auth.api'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export default function ForgotPassword() {
+  usePageTitle('Forgot Password')
   const [email, setEmail] = useState('')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)

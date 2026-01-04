@@ -3,6 +3,7 @@ import { Users, UserPlus, Copy, Check, AlertCircle } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import { createUserApi } from '../../api/auth.api'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 const ROLES = [
   { value: 'member', label: 'Member' },
@@ -18,6 +19,8 @@ export default function UsersManagement() {
   const [role, setRole] = useState('member')
   const [createdUser, setCreatedUser] = useState(null)
   const [copiedPassword, setCopiedPassword] = useState(false)
+
+  usePageTitle('User Management')
 
   // Check if current user is a manager
   const isManager = ['manager', 'project_manager'].includes(user?.role)

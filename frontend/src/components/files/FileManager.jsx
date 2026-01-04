@@ -19,7 +19,7 @@ import { useToast } from '../../hooks/useToast'
  * @param {function} onFileChange - Optional: Callback when files are uploaded/deleted
  * @param {boolean} compact - Optional: Use compact layout (default: false)
  */
-export default function FileManager({ 
+function FileManager({ 
   projectId, 
   taskId = null, 
   refresh = 0,
@@ -126,7 +126,7 @@ export default function FileManager({
   return (
     <div className="space-y-3">
       {/* Upload Button */}
-      <label className="cursor-pointer">
+      <label className="cursor-pointer inline-block mb-4 w-full">
         <Button 
           as="span" 
           variant={compact ? "secondary" : "primary"}
@@ -213,3 +213,5 @@ export default function FileManager({
     </div>
   )
 }
+
+export default FileManager

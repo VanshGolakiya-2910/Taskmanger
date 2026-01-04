@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Moon, Sun } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
+import { usePageTitle } from '../../hooks/usePageTitle'
 import { useTheme } from '../../context/ThemeContext'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
@@ -10,6 +11,8 @@ export default function Login() {
   const { login } = useAuth()
   const { isDark, toggleTheme } = useTheme()
   const navigate = useNavigate()
+
+  usePageTitle('Login')
 
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState(null)

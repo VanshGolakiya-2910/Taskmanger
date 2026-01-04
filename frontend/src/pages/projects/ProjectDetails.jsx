@@ -19,6 +19,7 @@ import { useChat } from '../../hooks/useChat'
 import ChatPanel from '../../components/chat/ChatPanel'
 import AddMemberModal from './components/AddMemberModal'
 import FileManager from '../../components/files/FileManager'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 // eslint-disable-next-line no-unused-vars
 function StatPill({ icon: IconComponent, label, value }) {
@@ -112,8 +113,26 @@ export default function ProjectDetails() {
   const [removeTarget, setRemoveTarget] = useState(null)
   const [fileRefresh, setFileRefresh] = useState(0)
 
+  const pageTitle = project?.name ? `${project.name} Overview` : 'Project Details'
+  usePageTitle(pageTitle)
+
   const canManage = canManageProjectMembers(user)
   const canCreate = canCreateTask(user)
+
+  const tasksByDueDate = useMemo(() => {
+    return tasks
+      .slice()
+      .sort((a, b) => {
+        const aDate = a.due_date || a.dueDate
+        const bDate = b.due_date || b.dueDate
+
+        if (!aDate && !bDate) return 0
+        if (!aDate) return 1
+        if (!bDate) return -1
+
+        return new Date(aDate) - new Date(bDate)
+      })
+  }, [tasks])
 
   const loadDetails = async () => {
     setLoading(true)
@@ -251,7 +270,61 @@ export default function ProjectDetails() {
                 No tasks yet. Create one to get started.
               </p>
             ) : (
-              <TaskStatusGrid tasks={tasks} />
+              <div className="space-y-5">
+                <TaskStatusGrid tasks={tasks} />
+
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+                      Tasks by due date
+                    </h3>
+                    <p className="text-xs text-slate-500">Soonest first</p>
+                  </div>
+
+                  <div className="space-y-2 max-h-72 overflow-y-auto pr-1 scroll-area">
+                    {tasksByDueDate.map((task) => {
+                      const statusMeta = TASK_STATUSES.find((s) => s.key === task.status) || {
+                        label: task.status || 'Unknown',
+                        color: 'slate',
+                      }
+
+                      const rawDue = task.due_date || task.dueDate
+                      const formattedDue = rawDue
+                        ? new Date(rawDue).toLocaleString(undefined, {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : 'No due date'
+
+                      return (
+                        <div
+                          key={task.id}
+                          className="flex items-center justify-between gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
+                        >
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
+                              {task.title}
+                            </p>
+                            <p className="text-xs text-slate-500">Due {formattedDue}</p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
+                            <button
+                              onClick={() => navigate(`/projects/${projectId}/tasks/${task.id}`)}
+                              aria-label={`Open task ${task.title}`}
+                              className="p-2 rounded-full text-slate-500 hover:text-white hover:bg-white/10 transition"
+                            >
+                              <ArrowUpRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
             )}
           </Card>
 

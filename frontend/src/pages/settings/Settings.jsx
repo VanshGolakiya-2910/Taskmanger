@@ -3,6 +3,7 @@ import { Lock, Mail, Eye, EyeOff, User, Pencil } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import { updateProfileApi } from '../../api/auth.api'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export default function Settings() {
   const { user } = useAuth()
@@ -16,6 +17,8 @@ export default function Settings() {
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+
+  usePageTitle('Settings')
 
   const handleSubmit = async (e) => {
     e.preventDefault()

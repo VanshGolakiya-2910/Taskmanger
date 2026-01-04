@@ -21,6 +21,7 @@ import {
 import StatusPicker from './Components/StatusPicker'
 import CommentsPanel from './Components/CommentsPanel'
 import FileManager from '../../components/files/FileManager'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 function InfoRow({ label, value }) {
   return (
@@ -43,6 +44,9 @@ export default function TaskDetails() {
   const [statusSaving, setStatusSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [confirmDelete, setConfirmDelete] = useState(false)
+
+  const pageTitle = task?.title ? `${task.title} · Task` : 'Task Details'
+  usePageTitle(pageTitle)
 
   const prettyDueDate = useMemo(() => {
     const raw = task?.due_date || task?.dueDate

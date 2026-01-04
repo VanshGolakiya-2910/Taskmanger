@@ -9,11 +9,14 @@ import Input from '../../components/ui/Input'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import { canCreateProject } from '../../utils/permissions'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export default function ProjectList() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { showToast } = useToast()
+
+  usePageTitle('Projects')
 
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)

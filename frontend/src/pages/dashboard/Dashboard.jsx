@@ -11,6 +11,7 @@ import { getMyTasksApi } from '../../api/task.api'
 import { TASK_STATUSES } from '../../utils/constant'
 import { useAuth } from '../../hooks/useAuth'
 import { canCreateTask } from '../../utils/permissions'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 // eslint-disable-next-line no-unused-vars
 function StatCard({ title, value, icon: IconComponent, accent }) {
@@ -34,6 +35,8 @@ function StatCard({ title, value, icon: IconComponent, accent }) {
 export default function Dashboard() {
   const navigate = useNavigate()
   const { user } = useAuth()
+
+  usePageTitle('Dashboard')
 
   const [projects, setProjects] = useState([])
   const [tasksByProject, setTasksByProject] = useState({})

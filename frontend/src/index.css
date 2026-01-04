@@ -154,5 +154,24 @@
   .hover\:bg-slate-100:hover {
     background-color: var(--bg-hover) !important;
   }
+
+  /* Slim, rounded scrollbar utility */
+  .scroll-area {
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 transparent;
+  }
+
+  .scroll-area::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scroll-area::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scroll-area::-webkit-scrollbar-thumb {
+    background-color: #94a3b8;
+    border-radius: 9999px;
+  }
 }
 

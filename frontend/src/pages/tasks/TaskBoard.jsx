@@ -7,10 +7,13 @@ import CreateTaskModal from "./Components/CreateModal";
 import { TASK_STATUSES } from "../../utils/constant";
 import { getProjectTasksApi } from "../../api/task.api";
 import { useAuth } from "../../hooks/useAuth";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 export default function TaskBoard() {
   const { projectId } = useParams();
   const { user } = useAuth();
+
+  usePageTitle(`Project ${projectId} Tasks`);
 
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);

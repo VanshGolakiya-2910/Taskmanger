@@ -5,11 +5,14 @@ import PageContainer from '../../components/layout/PageContainer'
 import ChatWindow from '../../components/chat/ChatWindow'
 import Button from '../../components/ui/Button'
 import { useChat } from '../../hooks/useChat'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export default function ChatPage() {
   const { projectId } = useParams()
   const navigate = useNavigate()
   const { switchProject } = useChat()
+
+  usePageTitle(projectId ? `Project ${projectId} Chat` : 'Project Chat')
 
   useEffect(() => {
     if (projectId) {

@@ -10,6 +10,7 @@ import Modal from '../../components/ui/Modal'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../hooks/useToast'
 import AddMemberModal from './components/AddMemberModal'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 function MemberCard({ member, canManage, onRemove }) {
   const displayName = member.name || member.email
@@ -67,6 +68,9 @@ export default function ProjectMembers() {
   const [error, setError] = useState(null)
   const [openAdd, setOpenAdd] = useState(false)
   const [removeTarget, setRemoveTarget] = useState(null)
+
+  const pageTitle = project ? `${project.name} Members` : 'Project Members'
+  usePageTitle(pageTitle)
 
   const canManage = user && project ? canManageProjectMembers(user, project) : false
 

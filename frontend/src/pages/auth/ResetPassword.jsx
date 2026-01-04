@@ -4,11 +4,14 @@ import { Lock, ArrowLeft, CheckCircle, Eye, EyeOff } from 'lucide-react'
 import Card from '../../components/ui/Card'
 import Button from '../../components/ui/Button'
 import { resetPasswordApi } from '../../api/auth.api'
+import { usePageTitle } from '../../hooks/usePageTitle'
 
 export default function ResetPassword() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const tokenFromUrl = searchParams.get('token') || ''
+
+  usePageTitle('Reset Password')
 
   const [form, setForm] = useState({
     token: tokenFromUrl,
