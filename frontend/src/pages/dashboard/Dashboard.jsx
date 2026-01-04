@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { CheckCircle, Folder, ListTodo, Plus, Sparkles } from 'lucide-react'
+import { CheckCircle, Folder, ListTodo, Plus, Sparkles, ChevronDown, ArrowUpRight } from 'lucide-react'
 
 import PageContainer from '../../components/layout/PageContainer'
 import Card from '../../components/ui/Card'
@@ -42,6 +42,7 @@ export default function Dashboard() {
   const [tasksByProject, setTasksByProject] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [showAllTasks, setShowAllTasks] = useState(false)
 
   useEffect(() => {
     let mounted = true
@@ -123,6 +124,21 @@ export default function Dashboard() {
       return acc
     }, {})
   }, [projects])
+
+  const tasksByDueDate = useMemo(() => {
+    return allTasks
+      .slice()
+      .sort((a, b) => {
+        const aDate = a.due_date || a.dueDate
+        const bDate = b.due_date || b.dueDate
+
+        if (!aDate && !bDate) return 0
+        if (!aDate) return 1
+        if (!bDate) return -1
+
+        return new Date(aDate) - new Date(bDate)
+      })
+  }, [allTasks])
 
   const recentTasks = useMemo(() => {
     return allTasks
@@ -247,37 +263,76 @@ export default function Dashboard() {
             {recentTasks.length > 0 && (
               <div className="border-t border-slate-200 dark:border-slate-700 pt-4">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white">My tasks</h3>
-                  <p className="text-xs text-slate-500">Last 5 assigned</p>
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Tasks by due date</h3>
+                  <p className="text-xs text-slate-500">Soonest first</p>
                 </div>
-                <div className="space-y-3">
-                  {recentTasks.map((task) => {
+                <div className={`space-y-2 ${showAllTasks ? 'max-h-96 overflow-y-auto pr-1 scroll-area' : ''}`}>
+                  {(showAllTasks ? tasksByDueDate : tasksByDueDate.slice(0, 5)).map((task) => {
+                    const statusMeta = TASK_STATUSES.find((s) => s.key === task.status) || {
+                      label: task.status || 'Unknown',
+                      color: 'slate',
+                    }
                     const taskProjectId = task.projectId || task.project_id
+                    const rawDue = task.due_date || task.dueDate
+                    const formattedDue = rawDue
+                      ? new Date(rawDue).toLocaleString(undefined, {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })
+                      : 'No due date'
+
                     return (
                       <div
                         key={`${task.id}-${taskProjectId}`}
-                        className="rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800"
-                        onClick={() => navigate(`/projects/${taskProjectId}/tasks/${task.id}`)}
+                        className="flex items-center justify-between gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                        onDoubleClick={() => navigate(`/projects/${taskProjectId}/tasks/${task.id}`)}
                       >
-                        <div className="flex items-center justify-between">
-                          <p className="font-medium text-slate-900 dark:text-white line-clamp-1">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
                             {task.title}
                           </p>
-                          <Badge
-                            color={
-                              TASK_STATUSES.find((s) => s.key === task.status)?.color || 'slate'
-                            }
-                          >
-                            {task.status}
-                          </Badge>
+                          <div className="flex items-center gap-2 mt-1">
+                            <p className="text-xs text-slate-500">Due {formattedDue}</p>
+                            <span className="text-xs text-slate-400">•</span>
+                            <p className="text-xs text-slate-500 truncate">
+                              {projectNameById[taskProjectId] || 'Unknown'}
+                            </p>
+                          </div>
                         </div>
-                        <p className="text-xs text-slate-500 mt-1 line-clamp-1">
-                          Project: {projectNameById[taskProjectId] || 'Unknown'}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <Badge color={statusMeta.color}>{statusMeta.label}</Badge>
+                          <button
+                            onClick={() => navigate(`/projects/${taskProjectId}/tasks/${task.id}`)}
+                            aria-label={`Open task ${task.title}`}
+                            className="p-2 rounded-full text-slate-500 hover:text-white hover:bg-slate-800 dark:hover:bg-white/10 transition"
+                          >
+                            <ArrowUpRight className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     )
                   })}
                 </div>
+                {tasksByDueDate.length > 5 && (
+                  <div className="mt-3 flex justify-center">
+                    <Button
+                      variant="secondary"
+                      className="gap-2"
+                      onClick={() => setShowAllTasks(!showAllTasks)}
+                    >
+                      {showAllTasks ? (
+                        <>Show Less</>
+                      ) : (
+                        <>
+                          <ChevronDown className="w-4 h-4" />
+                          Show More ({tasksByDueDate.length - 5} more)
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </Card>
