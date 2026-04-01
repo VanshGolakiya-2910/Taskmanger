@@ -42,7 +42,7 @@ mariadb --protocol=socket --socket="$MYSQL_SOCKET" -u root -e "GRANT ALL PRIVILE
 mariadb --protocol=socket --socket="$MYSQL_SOCKET" -u root -e "FLUSH PRIVILEGES;"
 
 echo "[entrypoint] Running schema migrations"
-node --input-type=module -e "import { runMigrations } from './src/config/runMigrations.js'; await runMigrations();"
+node --input-type=module -e "import { runMigrations } from './src/config/runMigrations.js'; import { closeDbPool } from './src/config/db.js'; try { await runMigrations(); } finally { await closeDbPool(); }"
 
 # Seed a one-time random manager account if no manager exists yet.
 manager_count="$(mariadb --protocol=socket --socket="$MYSQL_SOCKET" -u root "$DB_NAME" -N -e "SELECT COUNT(*) FROM users WHERE role='manager';" 2>/dev/null || echo 0)"
@@ -51,7 +51,7 @@ if [ "$manager_count" = "0" ]; then
   seed_admin_email="admin.$(node -e "const c=require('crypto');process.stdout.write(c.randomBytes(4).toString('hex'))")@local.taskmanager"
   seed_admin_password="$(node -e "const c=require('crypto');process.stdout.write(c.randomBytes(24).toString('base64url'))")"
   export seed_admin_password
-  seed_admin_hash="$(node --input-type=module -e "import bcrypt from 'bcrypt'; const hash = await bcrypt.hash(process.env.seed_admin_password, 10); process.stdout.write(hash);")"
+  seed_admin_hash="$(node --input-type=module -e "import { hashPassword } from './src/utils/password.js'; const hash = await hashPassword(process.env.seed_admin_password); process.stdout.write(hash);")"
 
   mariadb --protocol=socket --socket="$MYSQL_SOCKET" -u root "$DB_NAME" -e "INSERT INTO users (email, password_hash, name, role) VALUES ('${seed_admin_email}', '${seed_admin_hash}', 'System Manager', 'manager');"
 
