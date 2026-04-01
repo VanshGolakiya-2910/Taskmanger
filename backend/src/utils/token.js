@@ -9,3 +9,5 @@ export const generateRefreshToken = (payload) =>
   jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
     expiresIn: process.env.JWT_REFRESH_EXPIRES,
   });
+
+export const verifyJWT = (token, secret) => jwt.verify(token, secret);
