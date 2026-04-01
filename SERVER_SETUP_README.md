@@ -15,7 +15,7 @@ Container networking model:
 Run as a sudo user:
 
 sudo apt update
-sudo apt install -y git docker.io docker-compose-plugin nginx
+sudo apt install -y git docker.io docker-compose-plugin
 sudo systemctl enable --now docker
 sudo systemctl enable --now nginx
 

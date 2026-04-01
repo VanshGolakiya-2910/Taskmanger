@@ -14,8 +14,7 @@ RUN apk add --no-cache tini
 COPY --from=deps /app/node_modules ./node_modules
 COPY --chown=node:node backend/package*.json ./
 COPY --chown=node:node backend/src ./src
-COPY --chown=node:node backend/public ./public
-COPY --chown=node:node backend/uploads ./uploads
+RUN mkdir -p /app/public /app/uploads && chown -R node:node /app/public /app/uploads
 
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
