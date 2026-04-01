@@ -1,0 +1,18 @@
+services:
+  taskmanager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: taskmanager:latest
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    volumes:
+      - taskmanager_mysql:/app/data/mysql
+      - taskmanager_uploads:/app/backend/uploads
+    restart: unless-stopped
+
+volumes:
+  taskmanager_mysql:
+  taskmanager_uploads:

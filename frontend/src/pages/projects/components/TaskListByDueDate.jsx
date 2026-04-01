@@ -42,7 +42,7 @@ export default function TaskListByDueDate({
         <p className="text-xs text-slate-500">Soonest first</p>
       </div>
 
-      <div className={`space-y-2 ${showAll ? 'max-h-96 overflow-y-auto pr-1 scroll-area' : ''}`}>
+      <div className={`space-y-2 ${showAll ? 'max-h-96 overflow-y-auto overflow-x-hidden pr-1 scroll-area' : ''}`}>
         {visibleTasks.length === 0 ? (
           <p className="text-sm text-slate-500 py-4 text-center">No tasks to display</p>
         ) : (

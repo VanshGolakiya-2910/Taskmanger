@@ -1,6 +1,6 @@
 import { createClient } from "redis";
 
-const redisUrl = process.env.REDIS_URL || "redis://localhost:6379";
+const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379";
 
 const client = createClient({ url: redisUrl });
 
@@ -51,4 +51,10 @@ export async function pingRedis() {
     await client.connect();
   }
   return client.ping();
+}
+
+export async function shutdownRedis() {
+  if (client.isOpen) {
+    await client.quit();
+  }
 }

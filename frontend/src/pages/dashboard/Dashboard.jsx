@@ -270,7 +270,7 @@ export default function Dashboard() {
                   <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Tasks by due date</h3>
                   <p className="text-xs text-slate-500">Soonest first</p>
                 </div>
-                <div className={`space-y-2 ${showAllTasks ? 'max-h-96 overflow-y-auto pr-1 scroll-area' : ''}`}>
+                <div className={`space-y-2 ${showAllTasks ? 'max-h-96 overflow-y-auto overflow-x-hidden pr-1 scroll-area' : ''}`}>
                   {(showAllTasks ? tasksByDueDate : tasksByDueDate.slice(0, 5)).map((task) => {
                     const statusMeta = TASK_STATUSES.find((s) => s.key === task.status) || {
                       label: task.status || 'Unknown',

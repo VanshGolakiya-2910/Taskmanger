@@ -12,4 +12,8 @@ const pool = mysql.createPool({
   multipleStatements: true  
 });
 
+export const closeDbPool = async () => {
+  await pool.end();
+};
+
 export default pool;

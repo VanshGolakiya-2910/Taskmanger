@@ -30,12 +30,17 @@ const allowlist = (process.env.ALLOWED_ORIGINS || "")
   .map((o) => o.trim())
   .filter(Boolean);
 
-const effectiveAllowlist = allowlist.length ? allowlist : devOrigins;
-
 const corsOptions = {
   origin: (origin, callback) => {
+    // ⚠️ IMPORTANT: In development, allow all origins for same-network development
+    // In production, only allow origins specified in ALLOWED_ORIGINS env variable
+    if (process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    }
+
+    // Production: Restrict to allowlist
     if (!origin) return callback(null, true); // Allow same-origin/non-browser tools
-    if (effectiveAllowlist.includes(origin)) return callback(null, true);
+    if (allowlist.includes(origin)) return callback(null, true);
     return callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
@@ -99,6 +104,10 @@ app.use("/api/v1/users", userRoutes);
 // Health check
 app.get("/", (req, res) => {
   res.status(200).json({ message: "API is running" });
+});
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
 });
 
 /* -------------------- 404 HANDLER -------------------- */
