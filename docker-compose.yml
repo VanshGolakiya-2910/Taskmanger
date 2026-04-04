@@ -6,11 +6,27 @@ services:
     image: taskmanager:latest
     env_file:
       - .env
+    environment:
+      ALLOWED_ORIGINS: http://localhost:3001,http://127.0.0.1:3001
     ports:
       - "3000:3000"
     volumes:
       - taskmanager_mysql:/app/data/mysql
       - taskmanager_uploads:/app/backend/uploads
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:3000/api/v1
+        VITE_SOCKET_URL: http://localhost:3000
+    image: taskmanager-frontend:latest
+    depends_on:
+      - taskmanager
+    ports:
+      - "3001:80"
     restart: unless-stopped
 
 volumes:
