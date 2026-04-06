@@ -47,9 +47,10 @@ npm run dev           # runs migrations, starts API
 # Frontend (new terminal)
 cd ../frontend
 npm install
-cp .env.sample .env   # set VITE_API_URL
+cp .env.sample .env   # set VITE_API_BASE_URL
 npm run dev           # opens http://localhost:5173
 ```
+
 
 ## Environment
 
@@ -67,8 +68,15 @@ npm run dev           # opens http://localhost:5173
 - `UPLOAD_DIR`
 
 ### Frontend keys
-- `VITE_API_URL` (e.g., http://localhost:5000/api/v1)
+- `VITE_API_BASE_URL` (e.g., http://localhost:5000/api/v1)
 - `VITE_SOCKET_URL` (optional, defaults to API origin if omitted)
+
+### Docker Compose single-variable setup
+- Set `APP_PUBLIC_ORIGIN` once in root `.env` (for example `https://taskmanager.vkarma.net`).
+- Compose derives:
+  - Frontend `VITE_API_BASE_URL` as `${APP_PUBLIC_ORIGIN}/api/v1`
+  - Frontend `VITE_SOCKET_URL` as `${APP_PUBLIC_ORIGIN}`
+  - Backend `ALLOWED_ORIGINS` as `${APP_PUBLIC_ORIGIN}`
 
 ## Caching strategy
 

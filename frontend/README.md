@@ -16,7 +16,8 @@ npm install
 Create `.env`:
 
 ```env
-VITE_API_URL=http://localhost:5000/api/v1
+VITE_API_BASE_URL=http://localhost:5000/api/v1
+VITE_SOCKET_URL=http://localhost:5000
 ```
 
 ## Run
@@ -36,3 +37,4 @@ npm run build
 
 - Auth tokens are handled via cookies/headers; ensure backend CORS `ALLOWED_ORIGINS` includes your frontend origin.
 - The backend exposes `X-Cache` headers when Redis serves cached responses.
+- With Docker Compose, you can set a single `APP_PUBLIC_ORIGIN` in the root `.env` and Compose derives frontend API/socket URLs and backend CORS origin automatically.
