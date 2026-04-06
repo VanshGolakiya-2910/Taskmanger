@@ -25,8 +25,15 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    // Only retry if it's a 401, not already retried, and not a refresh token request
-    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/auth/refresh')) {
+    // Only retry if it's a 401, not already retried, has a token to refresh with, and not a refresh/login request
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      accessToken && // Only retry if we have a stored token (means user was logged in)
+      !originalRequest.url?.includes('/auth/refresh') &&
+      !originalRequest.url?.includes('/auth/login') &&
+      !originalRequest.url?.includes('/auth/register')
+    ) {
       originalRequest._retry = true
       try {
         const { data } = await api.post('/auth/refresh')

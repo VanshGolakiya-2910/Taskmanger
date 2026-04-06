@@ -3,7 +3,7 @@ import app from "./app.js";
 import { runMigrations } from "./config/runMigrations.js";
 import "./config/validateEnv.js";
 import http from "http";
-import { initSocketServer } from "./realtime/socket.server.js";
+// import { initSocketServer } from "./realtime/socket.server.js";
 import { initRedis, shutdownRedis } from "./config/redis.js";
 import { closeDbPool } from "./config/db.js";
 
@@ -13,7 +13,8 @@ const server = http.createServer(app);
   await Promise.all([runMigrations(), initRedis({ required: true })]);
 })();
 
-export const io = initSocketServer(server);
+// Chat/socket functionality is intentionally disabled.
+export const io = null;
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
