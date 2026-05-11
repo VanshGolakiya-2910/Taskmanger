@@ -1,0 +1,57 @@
+name: Deploy Taskmanger
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Sync Repository To Server Directory
+        run: |
+          mkdir -p /home/github-runner/opt/Taskmanger
+
+          rsync -av --delete ./ /home/github-runner/opt/Taskmanger/
+
+      - name: Build And Deploy Containers
+        run: |
+          cd /home/github-runner/opt/Taskmanger
+
+          docker compose up -d --build
+
+      - name: Wait For Services
+        run: sleep 20
+
+      - name: Backend Health Check
+        run: |
+          curl -fsS http://localhost:3000/health || (
+            echo "Backend health check failed"
+
+            docker compose \
+              -f /home/github-runner/opt/Taskmanger/docker-compose.yml \
+              logs --tail=100
+
+            exit 1
+          )
+
+      - name: Frontend Health Check
+        run: |
+          curl -fsS http://localhost:5173 || (
+            echo "Frontend health check failed"
+
+            docker compose \
+              -f /home/github-runner/opt/Taskmanger/docker-compose.yml \
+              logs --tail=100
+
+            exit 1
+          )
