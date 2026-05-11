@@ -17,15 +17,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Sync Repository To Server Directory
+      - name: Sync Repository To Server
         run: |
-          mkdir -p /home/github-runner/opt/Taskmanger
+          mkdir -p /home/vishwakarma/opt/Taskmanger
 
-          rsync -av --delete ./ /home/github-runner/opt/Taskmanger/
+          rsync -av --delete ./ /home/vishwakarma/opt/Taskmanger/
 
       - name: Build And Deploy Containers
         run: |
-          cd /home/github-runner/opt/Taskmanger
+          cd /home/vishwakarma/opt/Taskmanger
 
           docker compose up -d --build
 
@@ -38,7 +38,7 @@ jobs:
             echo "Backend health check failed"
 
             docker compose \
-              -f /home/github-runner/opt/Taskmanger/docker-compose.yml \
+              -f /home/vishwakarma/opt/Taskmanger/docker-compose.yml \
               logs --tail=100
 
             exit 1
@@ -50,7 +50,7 @@ jobs:
             echo "Frontend health check failed"
 
             docker compose \
-              -f /home/github-runner/opt/Taskmanger/docker-compose.yml \
+              -f /home/vishwakarma/opt/Taskmanger/docker-compose.yml \
               logs --tail=100
 
             exit 1
